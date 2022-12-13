@@ -19,7 +19,7 @@ public class ItemStorageImpl implements ItemStorage {
      */
     @Override
     public Item get(long id) {
-        if(!items.containsKey(id)) {
+        if (!items.containsKey(id)) {
             throw new NotFoundException("Вещь с идентификатором " +
                     id + " не зарегистрирована!");
         }
@@ -61,7 +61,7 @@ public class ItemStorageImpl implements ItemStorage {
      */
     @Override
     public Item patch(Item item) {
-        if(!items.containsKey(item.getId())) {
+        if (!items.containsKey(item.getId())) {
             throw new NotFoundException("Вещь с идентификатором " +
                     item.getId() + " не зарегистрирована!");
         }
