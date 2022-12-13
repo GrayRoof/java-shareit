@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.item.ItemStorage;
 import ru.practicum.shareit.item.model.Item;
 
 @Component
