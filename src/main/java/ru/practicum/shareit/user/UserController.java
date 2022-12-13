@@ -19,16 +19,19 @@ public class UserController {
 
     @GetMapping("{id}")
     public UserDto getUserById(@PathVariable long id) {
+
         return userService.get(id);
     }
 
     @GetMapping
     public Collection<UserDto> getAllUsers(){
+
         return userService.getAll();
     }
 
     @PostMapping
     public UserDto create(@Valid @RequestBody UserDto userDto) {
+
         return userService.add(userDto);
     }
 
@@ -40,6 +43,7 @@ public class UserController {
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable long id){
+
         userService.delete(id);
     }
 
