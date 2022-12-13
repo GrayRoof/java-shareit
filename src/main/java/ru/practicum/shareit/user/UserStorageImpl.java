@@ -75,11 +75,12 @@ public class UserStorageImpl implements UserStorage {
     }
 
     private void validateId(long id) {
-        if(id != 0 && !users.containsKey(id)) {
+        if (id != 0 && !users.containsKey(id)) {
             throw new NotFoundException("Пользователь с идентификатором " +
                     id + " не зарегистрирован!");
         }
     }
+
     private void validateEmail(User user) {
         if (users.values()
                 .stream()
