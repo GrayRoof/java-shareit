@@ -3,7 +3,6 @@ package ru.practicum.shareit.user;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.Exception.DuplicateEmailException;
 import ru.practicum.shareit.Exception.NotFoundException;
-import ru.practicum.shareit.Exception.NotValidException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;
