@@ -14,9 +14,6 @@ public class ItemStorageImpl implements ItemStorage {
     private int increment = 0;
     private final Map<Long, Item> items = new HashMap<>();
 
-    /**
-     * @return
-     */
     @Override
     public Item get(long id) {
         if (!items.containsKey(id)) {
@@ -26,9 +23,6 @@ public class ItemStorageImpl implements ItemStorage {
         return items.get(id);
     }
 
-    /**
-     * @return
-     */
     @Override
     public Collection<Item> getAllByOwnerId(long ownerId) {
         return items.values()
@@ -37,9 +31,6 @@ public class ItemStorageImpl implements ItemStorage {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * @return
-     */
     @Override
     public Item add(Item item) {
         if (item.getAvailable() == null) {
@@ -56,9 +47,6 @@ public class ItemStorageImpl implements ItemStorage {
         return items.get(item.getId());
     }
 
-    /**
-     * @return
-     */
     @Override
     public Item patch(Item item) {
         if (!items.containsKey(item.getId())) {
@@ -79,20 +67,12 @@ public class ItemStorageImpl implements ItemStorage {
         return items.get(patchedItem.getId());
     }
 
-    /**
-     * @return
-     */
     @Override
     public boolean delete(long id) {
         items.remove(id);
         return !items.containsKey(id);
     }
 
-    /**
-     * @param keyword
-     * @param userId
-     * @return
-     */
     @Override
     public Collection<Item> search(String keyword, long userId) {
         Collection<Item> result = new ArrayList<>();

@@ -19,19 +19,12 @@ public class ItemServiceImpl implements ItemService {
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
 
-    /**
-     * @return
-     */
     @Override
     public ItemDto get(long id) {
         ItemDto itemDto = ItemMapper.toItemDto(itemStorage.get(id));
         return itemDto;
     }
 
-    /**
-     * @param userId
-     * @return
-     */
     @Override
     public Collection<ItemDto> getAllByUserId(long userId) {
        return itemStorage.getAllByOwnerId(userId)
@@ -40,9 +33,6 @@ public class ItemServiceImpl implements ItemService {
                .collect(Collectors.toList());
     }
 
-    /**
-     * @return
-     */
     @Override
     public ItemDto add(ItemDto itemDto, long userId) {
         userStorage.get(userId);
@@ -50,9 +40,6 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.toItemDto(newItem);
     }
 
-    /**
-     * @return
-     */
     @Override
     public ItemDto patch(ItemDto itemDto, long itemId, long userId) throws NotFoundException {
         Item storedItem = itemStorage.get(itemId);
@@ -68,20 +55,12 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    /**
-     * @return
-     */
     @Override
     public boolean delete(long id) {
         itemStorage.get(id);
         return itemStorage.delete(id);
     }
 
-    /**
-     * @param text
-     * @param userId
-     * @return
-     */
     @Override
     public Collection<ItemDto> search(String text, long userId) {
         Collection<ItemDto> result = itemStorage.search(text, userId)
