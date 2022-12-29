@@ -14,5 +14,5 @@ CREATE TABLE IF NOT EXISTS items (
                                      OwnerID BIGINT NOT NULL,
                                      RequestID BIGINT,
                                      CONSTRAINT pk_item PRIMARY KEY(id),
-                                     CONSTRAINT fk_item_user FOREIGN KEY(OwnerId) REFERENCES users(ID),
+                                     CONSTRAINT fk_item_user FOREIGN KEY(OwnerId) REFERENCES users(ID)
 );

@@ -3,7 +3,6 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.Exception.ForbiddenException;
-import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -41,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto patch(ItemDto itemDto, long itemId, long userId) throws NotFoundException {
+    public ItemDto patch(ItemDto itemDto, long itemId, long userId) throws ForbiddenException {
         Item storedItem = itemStorage.get(itemId);
         if (storedItem.getOwner() != userId) {
             throw new ForbiddenException("Владелец вещи не совпадает с пользователем " + userId + ". " +

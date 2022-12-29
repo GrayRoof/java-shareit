@@ -2,17 +2,32 @@ package ru.practicum.shareit.item.model;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import ru.practicum.shareit.request.ItemRequest;
+import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "items")
+@ToString
 @Data
 @RequiredArgsConstructor
 public class Item {
+    @Id
+    @Column(name = "ID")
     private long id;
+    @Column(name = "Name")
     private String name;
+    @Column(name = "Description")
     private String description;
+    @Column(name = "IsAvailable")
     private Boolean available;
+    @Column(name = "OwnerID")
     private Long owner;
-    private ItemRequest request;
+    @Column(name = "RequestID")
+    private Long request;
 
     public Item(long id, String name, String description, Boolean available, long owner) {
         this.id = id;

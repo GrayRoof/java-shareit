@@ -1,39 +1,36 @@
 package ru.practicum.shareit.user;
 
+import org.modelmapper.ModelMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserStorage userStorage;
+
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     /**
      * @param id
      * @return
      */
     @Override
-    public UserDto get(long id) {
-        UserDto userDto = UserMapper.toUserDto(userStorage.get(id));
-        return userDto;
+    public User get(long id) throws NotFoundException {
+        return userRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     /**
      * @return
      */
     @Override
-    public Collection<UserDto> getAll() {
-        Collection<UserDto> userDtos = userStorage.getAll()
-                .stream()
-                .map(UserMapper::toUserDto)
-                .collect(Collectors.toList());
-        return userDtos;
+    public Collection<User> getAll() {
+        return userRepository.findAll();
     }
 
     /**
@@ -41,9 +38,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public UserDto add(UserDto userDto) {
-        User user = userStorage.add(UserMapper.toUser(userDto));
-        return UserMapper.toUserDto(user);
+    public User add(UserDto userDto) {
+        return userRepository.save(modelMapper.map(userDto, User.class));
     }
 
     /**
@@ -51,10 +47,10 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public UserDto patch(UserDto userDto, long id) {
-        userDto.setId(id);
-        UserDto patched = UserMapper.toUserDto(userStorage.patch(UserMapper.toUser(userDto)));
-        return patched;
+    public User patch(UserDto userDto, long id) throws NotFoundException {
+        User user = modelMapper.map(get(id), User.class);
+        modelMapper.map(userDto, user);
+        return userRepository.save(user);
     }
 
     /**
@@ -62,7 +58,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Boolean delete(long id) {
-        return userStorage.delete(id);
+    public void delete(long id) {
+        userRepository.deleteById(id);
     }
 }
