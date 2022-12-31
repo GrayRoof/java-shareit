@@ -40,7 +40,7 @@ public class UserStorageImpl implements UserStorage {
     @Override
     public User add(User user) {
         validateEmail(user);
-        user.setId(++increment);
+        user.setId((long) ++increment);
         users.put(user.getId(), user);
         return users.get(user.getId());
     }
@@ -77,7 +77,7 @@ public class UserStorageImpl implements UserStorage {
     private void validateId(long id) throws NotFoundException {
         if (id != 0 && !users.containsKey(id)) {
             throw new NotFoundException("Пользователь с идентификатором " +
-                    id + " не зарегистрирован!");
+                   id + " не зарегистрирован!");
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.Collection;
@@ -11,7 +12,7 @@ public interface ItemService {
      * @param id идентификатор вещи
      * @return ItemDto
      */
-    ItemDto get(long id);
+    ItemDto get(long id) throws NotFoundException;
 
     /**
      * Возвращает коллекцию DTO Вещей Пользователя
@@ -26,7 +27,7 @@ public interface ItemService {
      * @param ownerId идентификатор Пользователя владельца
      * @return DTO добавленного объекта Item в хранилище
      */
-    ItemDto add(ItemDto itemDto, long ownerId);
+    ItemDto add(ItemDto itemDto, long ownerId) throws NotFoundException;
 
     /**
      * Реализует обновление полей хранимой Вещи
@@ -35,14 +36,14 @@ public interface ItemService {
      * @param userId идентификатор Пользователя
      * @return DTO обновленного объекта Item
      */
-    ItemDto patch(ItemDto itemDto, long itemId, long userId);
+    ItemDto patch(ItemDto itemDto, long itemId, long userId) throws NotFoundException;
 
     /**
      * Реализует удаление Вещи из хранилища
      * @param id идентификатор удаляемой вещи
      * @return true в случае успешного удаления
      */
-    boolean delete(long id);
+    void delete(long id);
 
     /**
      * Реализует поиск Вещей в хранилище по ключевому слову

@@ -15,7 +15,7 @@ public class ItemStorageImpl implements ItemStorage {
     private final Map<Long, Item> items = new HashMap<>();
 
     @Override
-    public Item get(long id) {
+    public Item get(long id) throws NotFoundException {
         if (!items.containsKey(id)) {
             throw new NotFoundException("Вещь с идентификатором " +
                     id + " не зарегистрирована!");
@@ -42,13 +42,13 @@ public class ItemStorageImpl implements ItemStorage {
         if (item.getDescription() == null || item.getDescription().isEmpty()) {
             throw new NotValidException("поле Описание не может быть пустым!");
         }
-        item.setId(++increment);
+        item.setId((long) ++increment);
         items.put(item.getId(), item);
         return items.get(item.getId());
     }
 
     @Override
-    public Item patch(Item item) {
+    public Item patch(Item item) throws NotFoundException {
         if (!items.containsKey(item.getId())) {
             throw new NotFoundException("Вещь с идентификатором " +
                     item.getId() + " не зарегистрирована!");

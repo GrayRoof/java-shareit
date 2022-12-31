@@ -8,13 +8,13 @@ import java.util.Collection;
 
 public interface UserService {
 
-    User get(long id) throws NotFoundException;
+    UserDto get(long id) throws NotFoundException;
 
-    Collection<User> getAll();
+    Collection<UserDto> getAll();
 
-    User add(UserDto userDto);
+    UserDto add(UserDto userDto);
 
-    User patch(UserDto userDto, long id) throws NotFoundException;
+    UserDto patch(UserDto userDto, long id) throws NotFoundException;
 
     void delete(long id);
 }

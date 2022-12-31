@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import javax.validation.Valid;
@@ -21,7 +22,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getId(@PathVariable long itemId) {
+    public ItemDto getId(@PathVariable long itemId) throws NotFoundException {
         return itemService.get(itemId);
     }
 
@@ -32,14 +33,14 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @Valid @RequestBody ItemDto itemDto) {
+                              @Valid @RequestBody ItemDto itemDto) throws NotFoundException {
         return itemService.add(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto patchItem(@RequestHeader("X-Sharer-User-Id") long userId,
                              @PathVariable long itemId,
-                             @Valid @RequestBody ItemDto itemDto) {
+                             @Valid @RequestBody ItemDto itemDto) throws NotFoundException {
         return itemService.patch(itemDto, itemId, userId);
     }
 

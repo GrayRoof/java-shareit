@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "items")
@@ -17,12 +14,13 @@ import javax.persistence.Table;
 public class Item {
     @Id
     @Column(name = "ID")
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(name = "Name")
     private String name;
     @Column(name = "Description")
     private String description;
-    @Column(name = "IsAvailable")
+    @Column(name = "Isavailable")
     private Boolean available;
     @Column(name = "OwnerID")
     private Long owner;

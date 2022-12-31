@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.Collection;
@@ -11,7 +12,7 @@ public interface ItemStorage {
      * @param id идентфикатор Вещи
      * @return объект Item
      */
-    Item get(long id);
+    Item get(long id) throws NotFoundException;
 
     /**
      * Возвращает коллекцию Вещей Пользователя
@@ -32,7 +33,7 @@ public interface ItemStorage {
      * @param item объект Вещи с изменениями
      * @return обновленный объект Item
      */
-    Item patch(Item item);
+    Item patch(Item item) throws NotFoundException;
 
     /**
      * Реализует удаление Вещи из хранилища
