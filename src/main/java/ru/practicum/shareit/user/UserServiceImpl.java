@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto get(long id) throws NotFoundException {
-        return UserMapper.toUserDto(userRepository.require(id));
+        return UserMapper.toUserDto(userRepository.get(id));
     }
 
     /**
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto patch(UserDto userDto, long id) throws NotFoundException {
-        User toPatchUser = userRepository.require(id);
+        User toPatchUser = userRepository.get(id);
         if (userDto.getName() != null && !userDto.getName().isEmpty()) {
             toPatchUser.setName(userDto.getName());
         }

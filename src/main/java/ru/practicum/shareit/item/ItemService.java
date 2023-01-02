@@ -1,7 +1,10 @@
 package ru.practicum.shareit.item;
 
 import ru.practicum.shareit.Exception.NotFoundException;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentToInputDto;
+import ru.practicum.shareit.item.dto.ItemToInputDto;
+import ru.practicum.shareit.item.dto.ItemToReturnDto;
 
 import java.util.Collection;
 
@@ -12,31 +15,31 @@ public interface ItemService {
      * @param id идентификатор вещи
      * @return ItemDto
      */
-    ItemDto get(long id) throws NotFoundException;
+    ItemToReturnDto get(long id) throws NotFoundException;
 
     /**
      * Возвращает коллекцию DTO Вещей Пользователя
      * @param userId идентификатор Пользователя владельца Вещи
      * @return коллекцию ItemDto
      */
-    Collection<ItemDto> getAllByUserId(long userId);
+    Collection<ItemToReturnDto> getAllByUserId(long userId);
 
     /**
      * Реализует добавление Вещи в хранилище
-     * @param itemDto DTO объект Вещи
+     * @param itemToInputDto DTO объект Вещи
      * @param ownerId идентификатор Пользователя владельца
      * @return DTO добавленного объекта Item в хранилище
      */
-    ItemDto add(ItemDto itemDto, long ownerId) throws NotFoundException;
+    ItemToReturnDto add(ItemToInputDto itemToInputDto, long ownerId) throws NotFoundException;
 
     /**
      * Реализует обновление полей хранимой Вещи
-     * @param itemDto объект Вещи с изменениями
+     * @param itemToInputDto объект Вещи с изменениями
      * @param itemId идентификатор Вещи
      * @param userId идентификатор Пользователя
      * @return DTO обновленного объекта Item
      */
-    ItemDto patch(ItemDto itemDto, long itemId, long userId) throws NotFoundException;
+    ItemToReturnDto patch(ItemToInputDto itemToInputDto, long itemId, long userId) throws NotFoundException;
 
     /**
      * Реализует удаление Вещи из хранилища
@@ -51,5 +54,15 @@ public interface ItemService {
      * @param userId идентификатор пользователя
      * @return коллекцию DTO объектов Item
      */
-    Collection<ItemDto> search(String keyword, long userId);
+    Collection<ItemToReturnDto> search(String keyword, long userId);
+
+    /**
+     * Реализует добавление комментария к Вещи
+     * @param userId идентификатор пользователя. Комментарий может оставить только
+     * Владелец Вещи или один из ее арендаторов
+     * @param itemId идентификатор Вещи
+     * @param commentToInputDto DTO объект комментария
+     * @return DTO объекта комментария
+     */
+    CommentDto addComment(Long userId, Long itemId, CommentToInputDto commentToInputDto);
 }

@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Exception.NotFoundException;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentToInputDto;
+import ru.practicum.shareit.item.dto.ItemToInputDto;
+import ru.practicum.shareit.item.dto.ItemToReturnDto;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -18,37 +21,46 @@ public class ItemController {
 
     @Autowired
     public ItemController(ItemService itemService) {
+
         this.itemService = itemService;
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getId(@PathVariable long itemId) throws NotFoundException {
+    public ItemToReturnDto getId(@PathVariable long itemId) throws NotFoundException {
         return itemService.get(itemId);
     }
 
     @GetMapping
-    public Collection<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public Collection<ItemToReturnDto> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
         return itemService.getAllByUserId(userId);
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @Valid @RequestBody ItemDto itemDto) throws NotFoundException {
-        return itemService.add(itemDto, userId);
+    public ItemToReturnDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
+                                   @Valid @RequestBody ItemToInputDto itemToReturnDto) throws NotFoundException {
+        return itemService.add(itemToReturnDto, userId);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto patchItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                             @PathVariable long itemId,
-                             @Valid @RequestBody ItemDto itemDto) throws NotFoundException {
-        return itemService.patch(itemDto, itemId, userId);
+    public ItemToReturnDto patchItem(@RequestHeader("X-Sharer-User-Id") long userId,
+                                     @PathVariable long itemId,
+                                     @Valid @RequestBody ItemToInputDto itemToReturnDto) throws NotFoundException {
+        return itemService.patch(itemToReturnDto, itemId, userId);
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> search(@RequestHeader("X-Sharer-User-Id") long userId,
-                                      @RequestParam String text) {
+    public Collection<ItemToReturnDto> search(@RequestHeader("X-Sharer-User-Id") long userId,
+                                              @RequestParam String text) {
         return itemService.search(text, userId);
     }
 
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(
+            @RequestHeader("X-Sharer-User-Id") long userId,
+            @PathVariable long itemId,
+            @Valid @RequestBody CommentToInputDto dto
+    ) {
+        return itemService.addComment(userId, itemId, dto);
+    }
 
 }

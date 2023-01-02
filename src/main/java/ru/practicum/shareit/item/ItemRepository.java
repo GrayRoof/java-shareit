@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    default Item require(long id) {
+    default Item get(long id) {
         return findById(id).orElseThrow(() -> new NotFoundException("Вещь с идентификатором #" + id
                 + " не зарегистрирована!"));
     }

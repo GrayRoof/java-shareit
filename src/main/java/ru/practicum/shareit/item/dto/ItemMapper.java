@@ -3,12 +3,13 @@ package ru.practicum.shareit.item.dto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
 @Component
 @RequiredArgsConstructor
 public class ItemMapper {
-    public static ItemDto toItemDto(Item item) {
-        return new ItemDto(
+    public static ItemToReturnDto toItemDto(Item item) {
+        return new ItemToReturnDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
@@ -17,13 +18,12 @@ public class ItemMapper {
         );
     }
 
-    public static Item toItem(ItemDto itemDto, long id) {
-        return new Item(
-                itemDto.getId(),
-                itemDto.getName() == null ? "" : itemDto.getName(),
-                itemDto.getDescription() == null ? "" : itemDto.getDescription(),
-                itemDto.getAvailable(),
-                id
-        );
+    public static Item toItem(ItemToInputDto itemToInputDto, User owner) {
+         Item item = new Item();
+         item.setName(itemToInputDto.getName() == null ? "" : itemToInputDto.getName());
+         item.setDescription(itemToInputDto.getDescription() == null ? "" : itemToInputDto.getDescription());
+         item.setAvailable(itemToInputDto.getAvailable());
+         item.setOwner(owner);
+         return item;
     }
 }
