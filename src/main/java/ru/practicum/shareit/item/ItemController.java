@@ -8,7 +8,7 @@ import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentToInputDto;
 import ru.practicum.shareit.item.dto.ItemToInputDto;
-import ru.practicum.shareit.item.dto.ItemToReturnDto;
+import ru.practicum.shareit.item.dto.ItemAllFieldsDto;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -28,22 +28,22 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemToReturnDto getId(@PathVariable long itemId) throws NotFoundException {
+    public ItemAllFieldsDto getId(@PathVariable long itemId) throws NotFoundException {
         log.info("ITEM получен запрос GET " + itemId);
         return itemService.get(itemId);
     }
 
     @GetMapping
-    public Collection<ItemToReturnDto> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public Collection<ItemAllFieldsDto> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
         log.info("ITEM получен запрос GET ALL");
         return itemService.getAllByUserId(userId);
     }
 
     @PostMapping
-    public ItemToReturnDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                                   @Valid @RequestBody ItemToInputDto itemToInputDto) throws NotFoundException {
-        log.info("ITEM получен запрос POST userId =" + userId + "тело запроса: " + itemToInputDto);
-        return itemService.add(itemToInputDto, userId);
+    public ItemAllFieldsDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
+                                    @Valid @RequestBody ItemAllFieldsDto itemAllFieldsDto) throws NotFoundException {
+        log.info("ITEM получен запрос POST userId =" + userId + "тело запроса: " + itemAllFieldsDto);
+        return itemService.add(itemAllFieldsDto, userId);
     }
 
     @PostMapping("/{itemId}/comment")
@@ -58,17 +58,17 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemToReturnDto patchItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                                     @PathVariable long itemId,
-                                     @Valid @RequestBody ItemToInputDto itemToInputDto) throws NotFoundException {
+    public ItemAllFieldsDto patchItem(@RequestHeader("X-Sharer-User-Id") long userId,
+                                      @PathVariable long itemId,
+                                      @Valid @RequestBody ItemToInputDto itemToInputDto) throws NotFoundException {
         log.info("ITEM получен запрос PATCH userId = " + userId
                 + " itemId = " + itemId + " тело запроса " + itemToInputDto);
         return itemService.patch(itemToInputDto, itemId, userId);
     }
 
     @GetMapping("/search")
-    public Collection<ItemToReturnDto> search(@RequestHeader("X-Sharer-User-Id") long userId,
-                                              @RequestParam String text) {
+    public Collection<ItemAllFieldsDto> search(@RequestHeader("X-Sharer-User-Id") long userId,
+                                               @RequestParam String text) {
         log.info("ITEM получен запрос GET userId = " + userId + " search = " + text);
         return itemService.search(text, userId);
     }

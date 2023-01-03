@@ -8,8 +8,8 @@ import ru.practicum.shareit.user.model.User;
 @Component
 @RequiredArgsConstructor
 public class ItemMapper {
-    public static ItemToReturnDto toItemDto(Item item) {
-        return new ItemToReturnDto(
+    public static ItemAllFieldsDto toItemDto(Item item) {
+        return new ItemAllFieldsDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
@@ -18,11 +18,11 @@ public class ItemMapper {
         );
     }
 
-    public static Item toItem(ItemToInputDto itemToInputDto, User owner) {
+    public static Item toItem(ItemAllFieldsDto itemAllFieldsDto, User owner) {
          Item item = new Item();
-         item.setName(itemToInputDto.getName() == null ? "" : itemToInputDto.getName());
-         item.setDescription(itemToInputDto.getDescription() == null ? "" : itemToInputDto.getDescription());
-         item.setAvailable(itemToInputDto.getAvailable());
+         item.setName(itemAllFieldsDto.getName() == null ? "" : itemAllFieldsDto.getName());
+         item.setDescription(itemAllFieldsDto.getDescription() == null ? "" : itemAllFieldsDto.getDescription());
+         item.setAvailable(itemAllFieldsDto.getAvailable());
          item.setOwner(owner);
          return item;
     }

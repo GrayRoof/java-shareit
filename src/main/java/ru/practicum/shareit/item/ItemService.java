@@ -4,7 +4,7 @@ import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentToInputDto;
 import ru.practicum.shareit.item.dto.ItemToInputDto;
-import ru.practicum.shareit.item.dto.ItemToReturnDto;
+import ru.practicum.shareit.item.dto.ItemAllFieldsDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.Collection;
@@ -16,7 +16,7 @@ public interface ItemService {
      * @param id идентификатор вещи
      * @return ItemDto
      */
-    ItemToReturnDto get(long id) throws NotFoundException;
+    ItemAllFieldsDto get(long id) throws NotFoundException;
 
     /**
      * Возвращает объект Вещи по идентификатору
@@ -30,15 +30,15 @@ public interface ItemService {
      * @param userId идентификатор Пользователя владельца Вещи
      * @return коллекцию ItemDto
      */
-    Collection<ItemToReturnDto> getAllByUserId(long userId);
+    Collection<ItemAllFieldsDto> getAllByUserId(long userId);
 
     /**
      * Реализует добавление Вещи в хранилище
-     * @param itemToInputDto DTO объект Вещи
+     * @param itemAllFieldsDto DTO объект Вещи
      * @param ownerId идентификатор Пользователя владельца
      * @return DTO добавленного объекта Item в хранилище
      */
-    ItemToReturnDto add(ItemToInputDto itemToInputDto, long ownerId) throws NotFoundException;
+    ItemAllFieldsDto add(ItemAllFieldsDto itemAllFieldsDto, long ownerId) throws NotFoundException;
 
     /**
      * Реализует обновление полей хранимой Вещи
@@ -47,7 +47,7 @@ public interface ItemService {
      * @param userId идентификатор Пользователя
      * @return DTO обновленного объекта Item
      */
-    ItemToReturnDto patch(ItemToInputDto itemToInputDto, long itemId, long userId) throws NotFoundException;
+    ItemAllFieldsDto patch(ItemToInputDto itemToInputDto, long itemId, long userId) throws NotFoundException;
 
     /**
      * Реализует удаление Вещи из хранилища
@@ -62,7 +62,7 @@ public interface ItemService {
      * @param userId идентификатор пользователя
      * @return коллекцию DTO объектов Item
      */
-    Collection<ItemToReturnDto> search(String keyword, long userId);
+    Collection<ItemAllFieldsDto> search(String keyword, long userId);
 
     /**
      * Реализует добавление комментария к Вещи

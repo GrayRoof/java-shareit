@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @RequiredArgsConstructor
-public class ItemToReturnDto {
+public class ItemAllFieldsDto {
     private Long id;
     @NotEmpty
     private String name;
@@ -17,7 +17,7 @@ public class ItemToReturnDto {
     private long owner;
     private long request;
 
-    public ItemToReturnDto(long id, String name, String description, Boolean available, long request) {
+    public ItemAllFieldsDto(long id, String name, String description, Boolean available, long request) {
         this.id = id;
         this.name = name;
         this.description = description;
