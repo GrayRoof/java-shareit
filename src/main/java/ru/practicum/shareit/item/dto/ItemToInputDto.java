@@ -9,6 +9,5 @@ import javax.validation.constraints.NotNull;
 public class ItemToInputDto {
     String name;
     String description;
-    @NotNull
     Boolean available;
 }

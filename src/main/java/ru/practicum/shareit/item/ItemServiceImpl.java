@@ -66,19 +66,31 @@ public class ItemServiceImpl implements ItemService {
             throw new ForbiddenException("Владелец вещи не совпадает с пользователем " + userId + ". " +
                     "Изменить вещь может только владелец!");
         } else {
-            if (itemToInputDto.getName() != null && !itemToInputDto.getName().isEmpty()) {
-                storedItem.setName(itemToInputDto.getName());
-            }
-            if (itemToInputDto.getDescription() != null && !itemToInputDto.getDescription().isEmpty()) {
-                storedItem.setDescription(itemToInputDto.getDescription());
-            }
-            storedItem.setAvailable(itemToInputDto.getAvailable());
 
-            Item patchedItem = itemRepository.save(storedItem);
+            Item patchedItem = itemRepository.save(
+                    patch(storedItem,
+                            itemToInputDto.getName(),
+                            itemToInputDto.getDescription(),
+                            itemToInputDto.getAvailable()
+                    )
+            );
             ItemAllFieldsDto patchedItemAllFieldsDto = ItemMapper.toItemDto(patchedItem);
             log.info("Вещь с идентификатором #{} обновлена. обновленные данные {}", storedItem.getId(), storedItem);
             return patchedItemAllFieldsDto;
         }
+    }
+
+    private Item patch(Item storedItem, String name, String description, Boolean available) {
+        if (name != null && !name.isEmpty()) {
+            storedItem.setName(name);
+        }
+        if (description != null && !description.isEmpty()) {
+            storedItem.setDescription(description);
+        }
+        if (available != null) {
+            storedItem.setAvailable(available);
+        }
+        return storedItem;
     }
 
     @Override
