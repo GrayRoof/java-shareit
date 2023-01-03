@@ -19,7 +19,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             " and i.available = true")
     Collection<Item> search(String text);
 
-    Collection<Item> findAllByOwnerOrderByIdAsc(Long userId);
+    Collection<Item> findAllByOwner_IdOrderByIdAsc(Long userId);
 
     Item findByIdOrderByIdDesc(long itemId) throws NotFoundException;
 }

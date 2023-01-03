@@ -7,9 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class ItemToInputDto {
-    @NotBlank
     String name;
-    @NotBlank
     String description;
     @NotNull
     Boolean available;

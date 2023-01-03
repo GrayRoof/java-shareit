@@ -44,7 +44,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemToReturnDto> getAllByUserId(long userId) {
-       return itemRepository.findAllByOwnerOrderByIdAsc(userId).stream()
+       return itemRepository.findAllByOwner_IdOrderByIdAsc(userId).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
