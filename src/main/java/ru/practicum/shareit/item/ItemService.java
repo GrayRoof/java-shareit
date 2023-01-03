@@ -5,6 +5,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentToInputDto;
 import ru.practicum.shareit.item.dto.ItemToInputDto;
 import ru.practicum.shareit.item.dto.ItemToReturnDto;
+import ru.practicum.shareit.item.model.Item;
 
 import java.util.Collection;
 
@@ -16,6 +17,13 @@ public interface ItemService {
      * @return ItemDto
      */
     ItemToReturnDto get(long id) throws NotFoundException;
+
+    /**
+     * Возвращает объект Вещи по идентификатору
+     * @param id идентификатор вещи
+     * @return Item
+     */
+    Item getEntity(long id) throws NotFoundException;
 
     /**
      * Возвращает коллекцию DTO Вещей Пользователя

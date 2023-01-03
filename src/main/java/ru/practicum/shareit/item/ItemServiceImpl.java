@@ -32,9 +32,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemToReturnDto get(long id) throws NotFoundException {
-        Item item = itemRepository.get(id);
+        Item item = getEntity(id);
         ItemToReturnDto itemToReturnDto = ItemMapper.toItemDto(item);
         return itemToReturnDto;
+    }
+
+    @Override
+    public Item getEntity(long id) throws NotFoundException {
+        return itemRepository.get(id);
     }
 
     @Override

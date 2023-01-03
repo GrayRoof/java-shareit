@@ -41,6 +41,15 @@ public class ItemController {
         return itemService.add(itemToReturnDto, userId);
     }
 
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(
+            @RequestHeader("X-Sharer-User-Id") long userId,
+            @PathVariable long itemId,
+            @Valid @RequestBody CommentToInputDto dto
+    ) {
+        return itemService.addComment(userId, itemId, dto);
+    }
+
     @PatchMapping("/{itemId}")
     public ItemToReturnDto patchItem(@RequestHeader("X-Sharer-User-Id") long userId,
                                      @PathVariable long itemId,
@@ -52,15 +61,6 @@ public class ItemController {
     public Collection<ItemToReturnDto> search(@RequestHeader("X-Sharer-User-Id") long userId,
                                               @RequestParam String text) {
         return itemService.search(text, userId);
-    }
-
-    @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(
-            @RequestHeader("X-Sharer-User-Id") long userId,
-            @PathVariable long itemId,
-            @Valid @RequestBody CommentToInputDto dto
-    ) {
-        return itemService.addComment(userId, itemId, dto);
     }
 
 }

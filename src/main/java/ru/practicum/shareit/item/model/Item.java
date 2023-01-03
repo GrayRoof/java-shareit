@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @ToString
 @Data
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Item {
     @Id
     @Column(name = "ID")
