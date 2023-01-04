@@ -17,19 +17,19 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     }
 
     @Query("SELECT b FROM Booking b WHERE b.booker.id = ?1 ORDER BY b.start DESC")
-    Collection<Booking> getAllForBooker(long bookerId);
+    Collection<Booking> getAll(long bookerId);
 
     @Query("SELECT b FROM Booking b WHERE b.booker.id = ?1 AND b.status = ?2 ORDER BY b.start DESC")
-    Collection<Booking> getAllByStatusForBooker(long bookerId, BookingStatus status);
+    Collection<Booking> getAllByStatus(long bookerId, BookingStatus status);
 
     @Query("SELECT b FROM Booking b WHERE b.booker.id = ?1 AND b.start <= ?2 AND b.end >= ?2 ORDER BY b.start DESC")
-    Collection<Booking> getAllCurrentForBooker(long bookerId, LocalDateTime now);
+    Collection<Booking> getAllCurrent(long bookerId, LocalDateTime now);
 
     @Query("SELECT b FROM Booking b WHERE b.booker.id = ?1 AND b.end < ?2 ORDER BY b.start DESC")
-    Collection<Booking> getAllPastForBooker(long bookerId, LocalDateTime now);
+    Collection<Booking> getAllPast(long bookerId, LocalDateTime now);
 
     @Query("SELECT b FROM Booking b WHERE b.booker.id = ?1 AND b.start > ?2 ORDER BY b.start DESC")
-    Collection<Booking> getAllFutureForBooker(long bookerId, LocalDateTime now);
+    Collection<Booking> getAllFuture(long bookerId, LocalDateTime now);
 
 
     @Query("SELECT b FROM Booking b WHERE b.item.owner.id = ?1 ORDER BY b.start DESC")

@@ -10,7 +10,6 @@ import ru.practicum.shareit.booking.dto.*;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserMapper;
@@ -58,22 +57,22 @@ public class BookingServiceImpl implements BookingService {
         Collection<Booking> found = null;
         switch (keyWord) {
             case ALL:
-                found = bookingRepository.getAllForBooker(userId);
+                found = bookingRepository.getAll(userId);
                 break;
             case WAITING:
-                found = bookingRepository.getAllByStatusForBooker(userId, BookingStatus.WAITING);
+                found = bookingRepository.getAllByStatus(userId, BookingStatus.WAITING);
                 break;
             case REJECTED:
-                found = bookingRepository.getAllByStatusForBooker(userId, BookingStatus.REJECTED);
+                found = bookingRepository.getAllByStatus(userId, BookingStatus.REJECTED);
                 break;
             case PAST:
-                found = bookingRepository.getAllPastForBooker(userId, now);
+                found = bookingRepository.getAllPast(userId, now);
                 break;
             case FUTURE:
-                found = bookingRepository.getAllFutureForBooker(userId, now);
+                found = bookingRepository.getAllFuture(userId, now);
                 break;
             case CURRENT:
-                found = bookingRepository.getAllCurrentForBooker(userId, now);
+                found = bookingRepository.getAllCurrent(userId, now);
                 break;
         }
         return found.stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
