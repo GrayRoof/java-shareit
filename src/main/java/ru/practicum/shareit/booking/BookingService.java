@@ -1,7 +1,9 @@
 package ru.practicum.shareit.booking;
 
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingNestedDto;
 import ru.practicum.shareit.booking.dto.BookingToInputDto;
+import ru.practicum.shareit.booking.model.Booking;
 
 import java.util.Collection;
 
@@ -15,6 +17,20 @@ public interface BookingService {
      * @return коллекцию DTO объектов Booking
      */
     BookingDto get(long userId, long bookingId);
+
+    /**
+     * Реализует получение последнего Бронирования из хранилища по идентификатору Вещи
+     * @param itemId идентификатор Вещи
+     * @return объект Booking
+     */
+    BookingNestedDto getLastForItem(long itemId);
+
+    /**
+     * Реализует получение предстоящего Бронирования из хранилища по идентификатору Вещи
+     * @param itemId идентификатор Вещи
+     * @return объект Booking
+     */
+    BookingNestedDto getNextForItem(long itemId);
 
     /**
      * Реализует получение списка Бронирований из хранилища текущего пользователя
@@ -33,6 +49,13 @@ public interface BookingService {
      */
     Collection<BookingDto> getForOwnedItems(long ownerId, String keyWord);
 
+    /**
+     * Реализует получение количества завершенных бронирований Вещи, выполненных текущим Пользователем
+     * @param itemId идентификатор Вещи
+     * @param userId идентификатор Пользователя
+     * @return коллекцию DTO объектов Booking
+     */
+    int getFinishedCount(long userId, long itemId);
     /**
      * Реализует создание Бронирования
      * @param userId идентификатор пользователя

@@ -62,5 +62,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     "AND b.end < ?3 " +
                     "AND b.status = ru.practicum.shareit.booking.model.BookingStatus.APPROVED"
     )
-    Integer getFinishedCount(long bookerId, long itemId, LocalDateTime now);
+    Integer getFinishedCount(long userId, long itemId, LocalDateTime now);
 }

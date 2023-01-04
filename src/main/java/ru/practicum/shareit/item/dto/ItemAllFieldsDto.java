@@ -2,8 +2,10 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import ru.practicum.shareit.booking.dto.BookingNestedDto;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.Collection;
 
 @Data
 @RequiredArgsConstructor
@@ -14,8 +16,10 @@ public class ItemAllFieldsDto {
     @NotEmpty
     private String description;
     private Boolean available;
-    private long owner;
-    private long request;
+    Collection<CommentDto> comments;
+    BookingNestedDto lastBooking;
+    BookingNestedDto nextBooking;
+    private Long request;
 
     public ItemAllFieldsDto(long id, String name, String description, Boolean available, long request) {
         this.id = id;

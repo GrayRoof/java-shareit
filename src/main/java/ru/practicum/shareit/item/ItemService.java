@@ -16,7 +16,7 @@ public interface ItemService {
      * @param id идентификатор вещи
      * @return ItemDto
      */
-    ItemAllFieldsDto get(long id) throws NotFoundException;
+    ItemAllFieldsDto get(long id, long userId) throws NotFoundException;
 
     /**
      * Возвращает объект Вещи по идентификатору

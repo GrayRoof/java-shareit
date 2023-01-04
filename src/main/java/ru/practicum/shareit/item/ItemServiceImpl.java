@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.Exception.ForbiddenException;
 import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.Exception.NotValidException;
+import ru.practicum.shareit.booking.BookingService;
+import ru.practicum.shareit.booking.dto.BookingNestedDto;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
@@ -28,12 +30,18 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
 
     private final UserService userService;
+    private final BookingService bookingService;
 
 
     @Override
-    public ItemAllFieldsDto get(long id) throws NotFoundException {
+    public ItemAllFieldsDto get(long id, long userId) throws NotFoundException {
         Item item = getEntity(id);
-        ItemAllFieldsDto itemAllFieldsDto = ItemMapper.toItemDto(item);
+        Collection<Comment> comments = getComments(id);
+        ItemAllFieldsDto itemAllFieldsDto = ItemMapper.toItemDto(item, comments);
+        if (userId == item.getOwner().getId()) {
+            itemAllFieldsDto.setLastBooking(getLastBooking(id));
+            itemAllFieldsDto.setNextBooking(getNextBooking(id));
+        }
         return itemAllFieldsDto;
     }
 
@@ -45,7 +53,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Collection<ItemAllFieldsDto> getAllByUserId(long userId) {
        return itemRepository.findAllByOwner_IdOrderByIdAsc(userId).stream()
-                .map(ItemMapper::toItemDto)
+                .map(item -> ItemMapper.toItemDto(item, getComments(item.getId()),
+                        getLastBooking(item.getId()), getNextBooking(item.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -114,7 +123,28 @@ public class ItemServiceImpl implements ItemService {
     public CommentDto addComment(Long userId, Long itemId, CommentToInputDto commentToInputDto) {
         User author = UserMapper.toUser(userService.get(userId));
         Item item = itemRepository.get(itemId);
-        Comment newComment = CommentMapper.toComment(commentToInputDto, author, item);
-        return CommentMapper.toCommentDto(commentRepository.save(newComment));
+        if (isBooker(userId, itemId)) {
+            Comment newComment = CommentMapper.toComment(commentToInputDto, author, item);
+            return CommentMapper.toCommentDto(commentRepository.save(newComment));
+        } else {
+            throw new NotValidException("Комментарий может оставить только арендатор Вещи!");
+        }
+    }
+
+    private Collection<Comment> getComments(long itemId) {
+       return commentRepository.findAllByItem_IdOrderByCreatedDesc(itemId);
+    }
+
+    private BookingNestedDto getLastBooking(long itemId) {
+        return bookingService.getLastForItem(itemId);
+    }
+
+    private BookingNestedDto getNextBooking(long itemId) {
+        return bookingService.getNextForItem(itemId);
+    }
+
+    private boolean isBooker(long userId, long itemId) {
+        int count = bookingService.getFinishedCount(userId, itemId);
+        return count > 0;
     }
 }

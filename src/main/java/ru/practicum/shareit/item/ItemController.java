@@ -28,9 +28,10 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemAllFieldsDto getId(@PathVariable long itemId) throws NotFoundException {
+    public ItemAllFieldsDto getId(@RequestHeader("X-Sharer-User-Id") long userId,
+                                  @PathVariable long itemId) throws NotFoundException {
         log.info("ITEM получен запрос GET " + itemId);
-        return itemService.get(itemId);
+        return itemService.get(itemId, userId);
     }
 
     @GetMapping

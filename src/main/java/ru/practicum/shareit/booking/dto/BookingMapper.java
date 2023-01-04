@@ -30,4 +30,13 @@ public class BookingMapper {
 
         return bookingDto;
     }
+
+    public static BookingNestedDto toBookingNestedDto(Booking booking) {
+        BookingNestedDto newBookingDto = new BookingNestedDto();
+        if (booking != null) {
+            newBookingDto.setId(booking.getId());
+            newBookingDto.setBookerId(booking.getBooker().getId());
+        }
+        return newBookingDto;
+    }
 }

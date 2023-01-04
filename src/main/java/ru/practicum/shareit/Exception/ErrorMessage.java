@@ -2,14 +2,16 @@ package ru.practicum.shareit.Exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Value;
 
 import java.util.Date;
 
 @Getter
 @AllArgsConstructor
+@Value
 public class ErrorMessage {
-    private Date timestamp;
-    private int statusCode;
-    private String message;
-    private String path;
+    Date timestamp;
+    int statusCode;
+    String error;
+    String path;
 }
