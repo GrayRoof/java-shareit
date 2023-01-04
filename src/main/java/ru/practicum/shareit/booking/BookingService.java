@@ -3,7 +3,6 @@ package ru.practicum.shareit.booking;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingNestedDto;
 import ru.practicum.shareit.booking.dto.BookingToInputDto;
-import ru.practicum.shareit.booking.model.Booking;
 
 import java.util.Collection;
 
@@ -56,6 +55,7 @@ public interface BookingService {
      * @return коллекцию DTO объектов Booking
      */
     int getFinishedCount(long userId, long itemId);
+
     /**
      * Реализует создание Бронирования
      * @param userId идентификатор пользователя

@@ -13,6 +13,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
         return findById(id).orElseThrow(() -> new NotFoundException("Вещь с идентификатором #" + id
                 + " не зарегистрирована!"));
     }
+
     @Query(" select i from Item i " +
             "where (upper(i.name) like upper(concat('%', ?1, '%')) " +
             " or upper(i.description) like upper(concat('%', ?1, '%')))" +
