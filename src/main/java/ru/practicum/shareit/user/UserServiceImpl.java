@@ -1,7 +1,9 @@
 package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -9,19 +11,21 @@ import ru.practicum.shareit.user.model.User;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserStorage userStorage;
+
+    private final UserRepository userRepository;
+
 
     /**
      * @param id
      * @return
      */
     @Override
-    public UserDto get(long id) {
-        UserDto userDto = UserMapper.toUserDto(userStorage.get(id));
-        return userDto;
+    public UserDto get(long id) throws NotFoundException {
+        return UserMapper.toUserDto(userRepository.get(id));
     }
 
     /**
@@ -29,11 +33,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Collection<UserDto> getAll() {
-        Collection<UserDto> userDtos = userStorage.getAll()
+        return userRepository.findAll()
                 .stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
-        return userDtos;
     }
 
     /**
@@ -42,8 +45,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto add(UserDto userDto) {
-        User user = userStorage.add(UserMapper.toUser(userDto));
-        return UserMapper.toUserDto(user);
+        User newUser = userRepository.save(UserMapper.toUser(userDto));
+        log.info("Пользователь создан с идентификатором #{}", newUser.getId());
+        return UserMapper.toUserDto(newUser);
     }
 
     /**
@@ -51,10 +55,18 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public UserDto patch(UserDto userDto, long id) {
-        userDto.setId(id);
-        UserDto patched = UserMapper.toUserDto(userStorage.patch(UserMapper.toUser(userDto)));
-        return patched;
+    public UserDto patch(UserDto userDto, long id) throws NotFoundException {
+        User toPatchUser = userRepository.get(id);
+        if (userDto.getName() != null && !userDto.getName().isEmpty()) {
+            toPatchUser.setName(userDto.getName());
+        }
+        if (userDto.getEmail() != null && !userDto.getEmail().isEmpty()) {
+            toPatchUser.setEmail(userDto.getEmail());
+        }
+
+        User patchedUser = userRepository.save(toPatchUser);
+        log.info("Пользователь #{} обновлен успешно", patchedUser.getId());
+        return UserMapper.toUserDto(patchedUser);
     }
 
     /**
@@ -62,7 +74,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Boolean delete(long id) {
-        return userStorage.delete(id);
+    public void delete(long id) {
+        userRepository.deleteById(id);
+        log.info("Пользователь #{} удален успешно", id);
     }
 }

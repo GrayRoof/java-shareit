@@ -2,28 +2,58 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.booking.dto.BookingNestedDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class ItemMapper {
-    public static ItemDto toItemDto(Item item) {
-        return new ItemDto(
+    public static ItemAllFieldsDto toItemDto(Item item) {
+        return new ItemAllFieldsDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                item.getRequest() != null ? item.getRequest().getId() : 0
+                item.getRequest() != null ? item.getRequest() : 0
         );
     }
 
-    public static Item toItem(ItemDto itemDto, long id) {
-        return new Item(
-                itemDto.getId(),
-                itemDto.getName() == null ? "" : itemDto.getName(),
-                itemDto.getDescription() == null ? "" : itemDto.getDescription(),
-                itemDto.getAvailable(),
-                id
+    public static ItemAllFieldsDto toItemDto(Item item, Collection<Comment> comments) {
+        ItemAllFieldsDto itemAllFieldsDto = toItemDto(item);
+        itemAllFieldsDto.setComments(comments
+                            .stream()
+                            .map(CommentMapper::toCommentDto)
+                            .collect(Collectors.toList())
         );
+        return itemAllFieldsDto;
+    }
+
+    public static ItemAllFieldsDto toItemDto(Item from,
+                                             Collection<Comment> comments,
+                                             BookingNestedDto lastBooking,
+                                             BookingNestedDto nextBooking) {
+        ItemAllFieldsDto itemAllFieldsDto = toItemDto(from, comments);
+
+        if (lastBooking != null && lastBooking.getId() != null) {
+            itemAllFieldsDto.setLastBooking(lastBooking);
+        }
+        if (nextBooking != null && nextBooking.getId() != null) {
+            itemAllFieldsDto.setNextBooking(nextBooking);
+        }
+        return itemAllFieldsDto;
+    }
+
+    public static Item toItem(ItemAllFieldsDto itemAllFieldsDto, User owner) {
+         Item item = new Item();
+         item.setName(itemAllFieldsDto.getName() == null ? "" : itemAllFieldsDto.getName());
+         item.setDescription(itemAllFieldsDto.getDescription() == null ? "" : itemAllFieldsDto.getDescription());
+         item.setAvailable(itemAllFieldsDto.getAvailable());
+         item.setOwner(owner);
+         return item;
     }
 }

@@ -51,7 +51,7 @@ public class ErrorHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {NotValidException.class})
+    @ExceptionHandler(value = {NotValidException.class, NotAvailableException.class})
     public ErrorMessage handleNotValidException(Exception exception, WebRequest request) {
         ErrorMessage error = new ErrorMessage(
                 new Date(),

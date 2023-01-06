@@ -1,18 +1,19 @@
 package ru.practicum.shareit.user;
 
+import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.Collection;
 
 public interface UserService {
 
-    UserDto get(long id);
+    UserDto get(long id) throws NotFoundException;
 
     Collection<UserDto> getAll();
 
     UserDto add(UserDto userDto);
 
-    UserDto patch(UserDto userDto, long id);
+    UserDto patch(UserDto userDto, long id) throws NotFoundException;
 
-    Boolean delete(long id);
+    void delete(long id);
 }
