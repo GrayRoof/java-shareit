@@ -139,7 +139,7 @@ public class BookingServiceImpl implements BookingService {
         userService.get(ownerId);
         Booking booking = bookingRepository.get(id);
 
-        if (!(ownerId == booking.getItem().getOwner().getId())) {
+        if (ownerId != booking.getItem().getOwner().getId()) {
             throw new NotFoundException("Unable to approve/reject booking #" + id);
         }
 
