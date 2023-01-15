@@ -11,6 +11,8 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -57,7 +59,12 @@ class UserControllerTest {
     }
 
     @Test
-    void getAllUsers() {
+    void getAllUsers() throws Exception {
+        when(userService.getAll())
+                .thenReturn(List.of(userDto));
+        mvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].id", is(userDto.getId()), Long.class));
     }
 
     @Test
