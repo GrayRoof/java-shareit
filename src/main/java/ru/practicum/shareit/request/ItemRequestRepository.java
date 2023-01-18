@@ -1,5 +1,7 @@
 package ru.practicum.shareit.request;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shareit.Exception.NotFoundException;
 
@@ -11,5 +13,7 @@ public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> 
                 + " не зарегистрирован!"));
     }
 
-    Collection<ItemRequest> findAllByRequesterIdOrderByCreatedAsc(Long userId);
+    Collection<ItemRequest> findAllByRequester_IdOrderByCreatedAsc(Long userId);
+
+    Page<ItemRequest> findAll(Pageable pageable);
 }
