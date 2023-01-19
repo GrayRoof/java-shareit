@@ -1,15 +1,23 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.Exception.NotValidException;
 import ru.practicum.shareit.item.ItemService;
+import ru.practicum.shareit.pagination.OffsetPageable;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
 import ru.practicum.shareit.user.UserService;
+import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.model.User;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ItemRequestServiceImpl implements ItemRequestService {
@@ -22,7 +30,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto get(long id, long userId) {
         userService.get(userId);
         ItemRequestDto requestDto = ItemRequestMapper.toItemRequestDto(itemRequestRepository.get(id));
-
         return requestDto;
     }
 
@@ -31,17 +38,36 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (size < 1 || from < 0) {
             throw new NotValidException("границы");
         }
-
-        return null;
+        return itemRequestRepository.findAll(OffsetPageable.of(from,size, Sort.unsorted()))
+                .stream()
+                .map(ItemRequestMapper::toItemRequestDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Collection<ItemRequestDto> getByUserId(long userId) {
-        return null;
+        userService.get(userId);
+        return itemRequestRepository.findAllByRequester_IdOrderByCreatedAsc(userId)
+                .stream()
+                .map(ItemRequestMapper::toItemRequestDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public ItemRequestDto add(ItemRequestDto itemRequestDto, long userId) {
-        return null;
+        User requester = UserMapper.toUser(userService.get(userId));
+        ItemRequest newRequest = new ItemRequest();
+        newRequest.setDescription(itemRequestDto.getDescription());
+        newRequest.setRequester(requester);
+        newRequest.setCreated(LocalDateTime.now());
+
+        ItemRequest created = itemRequestRepository.save(newRequest);
+        log.info(
+                "Запрос '{}' от Пользователя #{} успешно зарегистрирован с id {}",
+                created.getDescription(),
+                userId,
+                created.getId()
+        );
+        return ItemRequestMapper.toItemRequestDto(created);
     }
 }
