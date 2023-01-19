@@ -59,6 +59,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public Collection<ItemAllFieldsDto> getAllByRequestId(long requestId) {
+        return itemRepository.findAllByRequest(requestId).stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ItemAllFieldsDto add(ItemAllFieldsDto itemAllFieldsDto, long userId) throws NotFoundException {
         User owner = UserMapper.toUser(userService.get(userId));
         if (Objects.isNull(itemAllFieldsDto.getAvailable())) {

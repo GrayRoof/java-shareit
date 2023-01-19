@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.dto;
 
 import lombok.Data;
+import lombok.NonNull;
 import ru.practicum.shareit.item.dto.ItemAllFieldsDto;
 import ru.practicum.shareit.item.dto.ItemToInputDto;
 import ru.practicum.shareit.user.model.User;

@@ -26,7 +26,7 @@ public class Item {
     @Column(name = "Isavailable")
     private Boolean available;
     @ManyToOne
-    @JoinColumn(name = "ownerid")
+    @JoinColumn(name = "OwnerID")
     private User owner;
     @Column(name = "RequestID")
     private Long request;

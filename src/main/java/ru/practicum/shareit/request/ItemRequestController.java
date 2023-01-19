@@ -1,14 +1,17 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.Exception.NotValidException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestToInputDto;
 
 import javax.validation.Valid;
 import java.util.Collection;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ public class ItemRequestController {
     @GetMapping("{requestId}")
     public ItemRequestDto getRequest(@RequestHeader("X-Sharer-User-Id")long userId,
                                      @PathVariable long requestId) throws NotFoundException {
+        log.info("REQUEST GET {} user {}", requestId, userId);
         return itemRequestService.get(requestId, userId);
     }
 
@@ -27,18 +31,21 @@ public class ItemRequestController {
                                                      @RequestParam(required = false, defaultValue = "0") int from,
                                                      @RequestParam(required = false, defaultValue = "20") int size)
             throws NotValidException, NotFoundException {
+        log.info("REQUEST GET all from {} limit {} user {}", userId, from, size);
         return itemRequestService.getAll(userId, from, size);
     }
 
     @GetMapping
     public Collection<ItemRequestDto> getRequestsByUserId(@RequestHeader("X-Sharer-User-Id")long userId)
             throws NotFoundException {
+        log.info("REQUEST GET by User ID {}", userId);
         return itemRequestService.getByUserId(userId);
     }
 
     @PostMapping
     public ItemRequestDto addNewRequest(@RequestHeader("X-Sharer-User-Id")long userId,
-                                        @Valid @RequestBody ItemRequestDto itemRequestDto) throws NotFoundException {
+                                        @Valid @RequestBody ItemRequestToInputDto itemRequestDto) throws NotFoundException {
+        log.info("REQUEST POST body {} user {}", itemRequestDto.getDescription(), userId);
         return itemRequestService.add(itemRequestDto, userId);
     }
 }

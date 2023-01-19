@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request;
 
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestToInputDto;
 
 import java.util.Collection;
 
@@ -36,6 +37,6 @@ public interface ItemRequestService {
      * @param userId идентификатор пользователя
      * @return ItemRequestDto
      */
-    ItemRequestDto add(ItemRequestDto itemRequestDto, long userId);
+    ItemRequestDto add(ItemRequestToInputDto itemRequestDto, long userId);
 
 }

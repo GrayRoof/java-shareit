@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.pagination.OffsetPageable;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
+import ru.practicum.shareit.request.dto.ItemRequestToInputDto;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -54,7 +55,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public ItemRequestDto add(ItemRequestDto itemRequestDto, long userId) {
+    public ItemRequestDto add(ItemRequestToInputDto itemRequestDto, long userId) {
         User requester = UserMapper.toUser(userService.get(userId));
         ItemRequest newRequest = new ItemRequest();
         newRequest.setDescription(itemRequestDto.getDescription());

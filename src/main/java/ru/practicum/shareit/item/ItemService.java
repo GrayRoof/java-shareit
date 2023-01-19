@@ -33,6 +33,13 @@ public interface ItemService {
     Collection<ItemAllFieldsDto> getAllByUserId(long userId);
 
     /**
+     * Возвращает коллекцию DTO Вещей по идентификатору Запроса
+     * @param requestId идентификатор Запроса Вещи
+     * @return коллекцию ItemDto
+     */
+    Collection<ItemAllFieldsDto> getAllByRequestId(long requestId);
+
+    /**
      * Реализует добавление Вещи в хранилище
      * @param itemAllFieldsDto DTO объект Вещи
      * @param ownerId идентификатор Пользователя владельца

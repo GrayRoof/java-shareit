@@ -22,5 +22,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Collection<Item> findAllByOwner_IdOrderByIdAsc(Long userId);
 
+    Collection<Item> findAllByRequest(Long requestId);
+
     Item findByIdOrderByIdDesc(long itemId) throws NotFoundException;
 }
