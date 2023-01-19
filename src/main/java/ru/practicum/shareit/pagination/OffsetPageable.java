@@ -2,6 +2,7 @@ package ru.practicum.shareit.pagination;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import ru.practicum.shareit.Exception.NotValidException;
 
 public class OffsetPageable implements Pageable {
 
@@ -16,11 +17,17 @@ public class OffsetPageable implements Pageable {
     }
 
     public static Pageable of(int offset, int limit, Sort sort) {
+        if (offset < 0 || limit < 1) {
+            throw new NotValidException("Параметры постраничного вывода введены некорректно: \n" +
+                    "начальная позиция не может быть меньше 0 \n" +
+                    "количество записей на странице не может быть меньше 1!");
+        }
         return new OffsetPageable(offset, limit, sort);
     }
 
     @Override
     public int getPageNumber() {
+
         return offset / limit;
     }
 
@@ -31,16 +38,19 @@ public class OffsetPageable implements Pageable {
 
     @Override
     public long getOffset() {
+
         return offset;
     }
 
     @Override
     public Sort getSort() {
+
         return sort;
     }
 
     @Override
     public Pageable next() {
+
         return of(getPageSize(), (int) (getOffset() + getPageSize()), getSort());
     }
 
@@ -53,16 +63,19 @@ public class OffsetPageable implements Pageable {
 
     @Override
     public Pageable first() {
+
         return of(getPageSize(), 0, getSort());
     }
 
     @Override
     public Pageable withPage(int pageNumber) {
+
         return of(getPageSize() * pageNumber, getPageSize(), getSort());
     }
 
     @Override
     public boolean hasPrevious() {
+
         return getOffset() >= getPageSize();
     }
 }

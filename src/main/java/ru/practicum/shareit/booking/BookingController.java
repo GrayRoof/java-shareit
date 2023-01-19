@@ -28,19 +28,23 @@ public class BookingController {
     @GetMapping
     public Collection<BookingDto> getCreated(
             @RequestHeader("X-Sharer-User-Id") long userId,
-            @RequestParam(defaultValue = "ALL") String state
+            @RequestParam(defaultValue = "ALL") String state,
+            @RequestParam(required = false, defaultValue = "0") int from,
+            @RequestParam(required = false, defaultValue = "20") int size
     ) {
-        log.info("BOOKING GET for user {} state {}", userId, state);
-        return bookingService.getCreated(userId, state);
+        log.info("BOOKING GET for user {} state {}. Pagination from {} limit {}", userId, state, from, size);
+        return bookingService.getCreated(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public Collection<BookingDto> getForOwnedItems(
             @RequestHeader("X-Sharer-User-Id") long userId,
-            @RequestParam(defaultValue = "ALL") String state
+            @RequestParam(defaultValue = "ALL") String state,
+            @RequestParam(required = false, defaultValue = "0") int from,
+            @RequestParam(required = false, defaultValue = "20") int size
     ) {
-        log.info("BOOKING GET for owner {} state {}", userId, state);
-        return bookingService.getForOwnedItems(userId, state);
+        log.info("BOOKING GET for owner {} state {}. Pagination from {} limit {}", userId, state, from, size);
+        return bookingService.getForOwnedItems(userId, state, from, size);
     }
 
     @PostMapping

@@ -38,7 +38,7 @@ public interface BookingService {
      *
      * @return коллекцию DTO объектов Booking
      */
-    Collection<BookingDto> getCreated(long userId, String keyWord);
+    Collection<BookingDto> getCreated(long userId, String keyWord, int from, int size);
 
     /**
      * Реализует получение списка бронирований для всех вещей текущего пользователя
@@ -46,7 +46,7 @@ public interface BookingService {
      * @param keyWord ключевое слово для вывода списка бронирований
      * @return коллекцию DTO объектов Booking
      */
-    Collection<BookingDto> getForOwnedItems(long ownerId, String keyWord);
+    Collection<BookingDto> getForOwnedItems(long ownerId, String keyWord, int from, int size);
 
     /**
      * Реализует получение количества завершенных бронирований Вещи, выполненных текущим Пользователем

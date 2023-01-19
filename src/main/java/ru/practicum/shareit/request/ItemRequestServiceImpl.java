@@ -39,9 +39,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public Collection<ItemRequestDto> getAll(long userId, int from, int size) {
-        if (size < 1 || from < 0) {
-            throw new NotValidException("границы");
-        }
         return itemRequestRepository.findAllByRequester_IdNot(userId, OffsetPageable.of(from,size, Sort.unsorted()))
                 .stream()
                 .map(itemRequest ->
