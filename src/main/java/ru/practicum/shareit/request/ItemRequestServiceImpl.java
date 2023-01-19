@@ -6,6 +6,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.Exception.NotValidException;
 import ru.practicum.shareit.item.ItemService;
+import ru.practicum.shareit.item.dto.ItemAllFieldsDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.pagination.OffsetPageable;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
@@ -30,7 +32,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestDto get(long id, long userId) {
         userService.get(userId);
-        ItemRequestDto requestDto = ItemRequestMapper.toItemRequestDto(itemRequestRepository.get(id));
+        ItemRequestDto requestDto = ItemRequestMapper.toItemRequestDto(itemRequestRepository.get(id),
+                itemService.getAllByRequestId(id));
         return requestDto;
     }
 
@@ -39,9 +42,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (size < 1 || from < 0) {
             throw new NotValidException("границы");
         }
-        return itemRequestRepository.findAll(OffsetPageable.of(from,size, Sort.unsorted()))
+        return itemRequestRepository.findAllByRequester_IdNot(userId, OffsetPageable.of(from,size, Sort.unsorted()))
                 .stream()
-                .map(ItemRequestMapper::toItemRequestDto)
+                .map(itemRequest ->
+                        ItemRequestMapper.toItemRequestDto(itemRequest,
+                                itemService.getAllByRequestId(itemRequest.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -50,7 +55,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         userService.get(userId);
         return itemRequestRepository.findAllByRequester_IdOrderByCreatedAsc(userId)
                 .stream()
-                .map(ItemRequestMapper::toItemRequestDto)
+                .map(itemRequest ->
+                    ItemRequestMapper.toItemRequestDto(itemRequest,
+                            itemService.getAllByRequestId(itemRequest.getId())))
                 .collect(Collectors.toList());
     }
 

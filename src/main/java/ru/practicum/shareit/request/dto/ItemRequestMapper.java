@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.dto;
 
+import ru.practicum.shareit.item.dto.ItemAllFieldsDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemToInputDto;
 import ru.practicum.shareit.item.model.Item;
@@ -15,16 +16,13 @@ public class ItemRequestMapper {
         itemRequestDto.setId(itemRequest.getId());
         itemRequestDto.setDescription(itemRequest.getDescription());
         itemRequestDto.setCreated(itemRequest.getCreated());
+        itemRequestDto.setRequester(itemRequest.getRequester());
         return itemRequestDto;
     }
 
-    public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest, Collection<Item> items) {
+    public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest, Collection<ItemAllFieldsDto> items) {
         ItemRequestDto itemRequestDto = toItemRequestDto(itemRequest);
-        itemRequestDto.setItems(items
-                .stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList())
-        );
+        itemRequestDto.setItems(items);
         return itemRequestDto;
     }
 }
