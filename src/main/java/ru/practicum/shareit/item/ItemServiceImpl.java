@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.Exception.ForbiddenException;
 import ru.practicum.shareit.Exception.NotFoundException;
@@ -12,6 +13,7 @@ import ru.practicum.shareit.booking.dto.BookingNestedDto;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.pagination.OffsetPageable;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -51,11 +53,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemAllFieldsDto> getAllByUserId(long userId) {
-       return itemRepository.findAllByOwner_IdOrderByIdAsc(userId).stream()
-                .map(item -> ItemMapper.toItemDto(item, getComments(item.getId()),
+    public Collection<ItemAllFieldsDto> getAllByUserId(long userId, int from, int size) {
+       return itemRepository.findAllByOwner_IdOrderByIdAsc(userId, OffsetPageable.of(from, size, Sort.unsorted()))
+               .stream()
+               .map(item -> ItemMapper.toItemDto(item, getComments(item.getId()),
                         getLastBooking(item.getId()), getNextBooking(item.getId())))
-                .collect(Collectors.toList());
+               .collect(Collectors.toList());
     }
 
     @Override
@@ -115,11 +118,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemAllFieldsDto> search(String text, long userId) {
+    public Collection<ItemAllFieldsDto> search(String text, long userId, int from, int size) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
-        Collection<ItemAllFieldsDto> result = itemRepository.search(text)
+        Collection<ItemAllFieldsDto> result = itemRepository.search(text, OffsetPageable.of(from, size, Sort.unsorted()))
                 .stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());

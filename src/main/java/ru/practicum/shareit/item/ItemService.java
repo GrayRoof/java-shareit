@@ -30,7 +30,7 @@ public interface ItemService {
      * @param userId идентификатор Пользователя владельца Вещи
      * @return коллекцию ItemDto
      */
-    Collection<ItemAllFieldsDto> getAllByUserId(long userId);
+    Collection<ItemAllFieldsDto> getAllByUserId(long userId, int from, int size);
 
     /**
      * Возвращает коллекцию DTO Вещей по идентификатору Запроса
@@ -69,7 +69,7 @@ public interface ItemService {
      * @param userId идентификатор пользователя
      * @return коллекцию DTO объектов Item
      */
-    Collection<ItemAllFieldsDto> search(String keyword, long userId);
+    Collection<ItemAllFieldsDto> search(String keyword, long userId, int from, int size);
 
     /**
      * Реализует добавление комментария к Вещи
