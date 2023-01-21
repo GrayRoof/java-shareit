@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.booking.dto.BookingNestedDto;
 import ru.practicum.shareit.booking.dto.BookingToInputDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -22,8 +20,6 @@ import ru.practicum.shareit.user.model.User;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.*;
@@ -47,7 +43,6 @@ class BookingControllerTest {
     ItemRequest firstItemRequest;
     Item firstItem;
     Booking booking;
-    BookingNestedDto bookingNestedDto;
     BookingDto bookingDto;
     BookingToInputDto bookingToInputDto;
 
@@ -66,7 +61,7 @@ class BookingControllerTest {
         bookingToInputDto.setStart(LocalDateTime.now().plusDays(1));
         bookingToInputDto.setEnd(LocalDateTime.now().plusDays(2));
 
-        Booking booking = new Booking();
+        booking = new Booking();
         booking.setId(1L);
         booking.setStart(LocalDateTime.now().plusDays(1));
         booking.setEnd(LocalDateTime.now().plusDays(2));
@@ -74,7 +69,6 @@ class BookingControllerTest {
         booking.setBooker(requester);
         booking.setStatus(BookingStatus.APPROVED);
 
-        //bookingNestedDto = BookingMapper.toBookingNestedDto(booking);
         bookingDto = BookingMapper.toBookingDto(booking);
 
 
