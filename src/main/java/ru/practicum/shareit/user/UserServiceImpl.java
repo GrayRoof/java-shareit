@@ -18,19 +18,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-
-    /**
-     * @param id
-     * @return
-     */
     @Override
     public UserDto get(long id) throws NotFoundException {
         return UserMapper.toUserDto(userRepository.get(id));
     }
 
-    /**
-     * @return
-     */
     @Override
     public Collection<UserDto> getAll() {
         return userRepository.findAll()
@@ -39,10 +31,6 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * @param userDto
-     * @return
-     */
     @Override
     public UserDto add(UserDto userDto) {
         User newUser = userRepository.save(UserMapper.toUser(userDto));
@@ -50,10 +38,6 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toUserDto(newUser);
     }
 
-    /**
-     * @param userDto
-     * @return
-     */
     @Override
     public UserDto patch(UserDto userDto, long id) throws NotFoundException {
         User toPatchUser = userRepository.get(id);
@@ -69,10 +53,6 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toUserDto(patchedUser);
     }
 
-    /**
-     * @param id
-     * @return
-     */
     @Override
     public void delete(long id) {
         userRepository.deleteById(id);
