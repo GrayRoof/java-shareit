@@ -39,8 +39,6 @@ class UserServiceImplTest {
     void setUp() {
         entityManager.createQuery("DELETE FROM User").executeUpdate();
         entityManager.createNativeQuery("ALTER TABLE users ALTER COLUMN id RESTART WITH 1").executeUpdate();
-
-
     }
 
     @Test
