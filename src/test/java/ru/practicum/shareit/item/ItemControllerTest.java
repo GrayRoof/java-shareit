@@ -49,12 +49,12 @@ class ItemControllerTest {
     @BeforeEach
     void setUp() {
         owner = new User(1L, "Owner", "Owner@test.test");
-        requester = new User( 2L, "Requester", "Requester@test.test");
-        firstRequest = new ItemRequest( 1L, "firstItem", requester, LocalDateTime.now());
-        secondRequest = new ItemRequest( 2L, "secondItem", requester, LocalDateTime.now());
-        firstItem = new Item( 1L, "FirstItem", "FirstItem 1",
+        requester = new User(2L, "Requester", "Requester@test.test");
+        firstRequest = new ItemRequest(1L, "firstItem", requester, LocalDateTime.now());
+        secondRequest = new ItemRequest(2L, "secondItem", requester, LocalDateTime.now());
+        firstItem = new Item(1L, "FirstItem", "FirstItem 1",
                 true, owner, firstRequest.getId());
-        secondItem = new Item( 2L, "SecondItem", "SecondItem 2",
+        secondItem = new Item(2L, "SecondItem", "SecondItem 2",
                 true, owner, secondRequest.getId());
         comment = new Comment();
         comment.setId(1L);
