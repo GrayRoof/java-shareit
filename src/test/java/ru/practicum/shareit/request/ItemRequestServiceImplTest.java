@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
 import ru.practicum.shareit.request.dto.ItemRequestToInputDto;
@@ -65,6 +66,22 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenTryToGetByWrongUserId() {
+        ItemRequest request = new ItemRequest(1L, "New Item",
+                UserMapper.toUser(otherUser), LocalDateTime.now());
+        ItemRequest saved = itemRequestRepository.save(request);
+        assertThrows(NotFoundException.class, () -> itemRequestService.get(saved.getId(), WRONG_ID));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToGetByWrongId() {
+        ItemRequest request = new ItemRequest(1L, "New Item",
+                UserMapper.toUser(otherUser), LocalDateTime.now());
+        itemRequestRepository.save(request);
+        assertThrows(NotFoundException.class, () -> itemRequestService.get(WRONG_ID, owner.getId()));
+    }
+
+    @Test
     void shouldReturnAllItemRequests() {
         ItemRequest request = new ItemRequest(1L, "New Item",
                 UserMapper.toUser(otherUser), LocalDateTime.now());
@@ -85,6 +102,14 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenTryGetAllByWrongUserId() {
+        ItemRequest request = new ItemRequest(1L, "New Item",
+                UserMapper.toUser(otherUser), LocalDateTime.now());
+        itemRequestRepository.save(request);
+        assertThrows(NotFoundException.class, () -> itemRequestService.getByUserId(WRONG_ID));
+    }
+
+    @Test
     void shouldAdd() {
         ItemRequest request = new ItemRequest(1L, "New Item",
                 UserMapper.toUser(otherUser), LocalDateTime.now());
@@ -94,5 +119,12 @@ class ItemRequestServiceImplTest {
         ItemRequestDto actual = itemRequestService.add(toInputDto, otherUser.getId());
         expected.setCreated(actual.getCreated());
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToAddByWrongUserId() {
+        ItemRequestToInputDto toInputDto = new ItemRequestToInputDto();
+        toInputDto.setDescription("New Item");
+        assertThrows(NotFoundException.class, () -> itemRequestService.add(toInputDto, WRONG_ID));
     }
 }

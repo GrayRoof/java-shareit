@@ -31,6 +31,12 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         userService.get(userId);
         ItemRequestDto requestDto = ItemRequestMapper.toItemRequestDto(itemRequestRepository.get(id),
                 itemService.getAllByRequestId(id));
+        log.info(
+                "Выдан ItemRequest #'{}' от пользователя #{}. Текст: {}",
+                requestDto.getId(),
+                userId,
+                requestDto.getDescription()
+        );
         return requestDto;
     }
 
