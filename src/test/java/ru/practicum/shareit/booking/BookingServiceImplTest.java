@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.Exception.NotAvailableException;
 import ru.practicum.shareit.Exception.NotFoundException;
+import ru.practicum.shareit.Exception.NotValidException;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingNestedDto;
@@ -143,7 +144,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void shouldReturnCreated() {
+    void shouldReturnCreatedFuture() {
         Booking booking = new Booking();
         Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
         bookingItem.setId(firstItemDto.getId());
@@ -159,7 +160,22 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void shouldReturnForOwnedItems() {
+    void shouldThrowExceptionWhenTryGetCreatedWithWrongKeyWord() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().plusDays(5));
+        booking.setEnd(LocalDateTime.now().plusDays(8));
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThrows(NotValidException.class, () -> bookingService
+                .getCreated(otherUserDto.getId(), "WrongKeyWord", 0, 20));
+    }
+
+    @Test
+    void shouldReturnCreatedAll() {
         Booking booking = new Booking();
         Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
         bookingItem.setId(firstItemDto.getId());
@@ -170,7 +186,167 @@ class BookingServiceImplTest {
         booking.setStatus(BookingStatus.APPROVED);
         Booking saved = bookingRepository.save(booking);
         Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
-        Collection<BookingDto> actual = bookingService.getForOwnedItems(ownerDto.getId(), "FUTURE", 0, 20);
+        Collection<BookingDto> actual = bookingService.getCreated(otherUserDto.getId(), "All", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnCreatedWaiting() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().plusDays(5));
+        booking.setEnd(LocalDateTime.now().plusDays(8));
+        booking.setStatus(BookingStatus.WAITING);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getCreated(otherUserDto.getId(), "WAITING", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnCreatedRejected() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().plusDays(5));
+        booking.setEnd(LocalDateTime.now().plusDays(8));
+        booking.setStatus(BookingStatus.REJECTED);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getCreated(otherUserDto.getId(), "rejected", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnCreatedPast() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().minusDays(5));
+        booking.setEnd(LocalDateTime.now().minusDays(1));
+        booking.setStatus(BookingStatus.APPROVED);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getCreated(otherUserDto.getId(), "past", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnCreatedCurrent() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().minusDays(5));
+        booking.setEnd(LocalDateTime.now().plusDays(8));
+        booking.setStatus(BookingStatus.APPROVED);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getCreated(otherUserDto.getId(), "Current", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnForOwnedItemsAll() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().plusDays(5));
+        booking.setEnd(LocalDateTime.now().plusDays(8));
+        booking.setStatus(BookingStatus.APPROVED);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getForOwnedItems(ownerDto.getId(), "all", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnForOwnedItemsWaiting() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().plusDays(5));
+        booking.setEnd(LocalDateTime.now().plusDays(8));
+        booking.setStatus(BookingStatus.WAITING);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getForOwnedItems(ownerDto.getId(), "waiting", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnForOwnedItemsRejected() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().plusDays(5));
+        booking.setEnd(LocalDateTime.now().plusDays(8));
+        booking.setStatus(BookingStatus.REJECTED);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getForOwnedItems(ownerDto.getId(), "Rejected", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnForOwnedItemsPast() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().minusDays(5));
+        booking.setEnd(LocalDateTime.now().minusDays(3));
+        booking.setStatus(BookingStatus.APPROVED);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getForOwnedItems(ownerDto.getId(), "past", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnForOwnedItemsFuture() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().plusDays(5));
+        booking.setEnd(LocalDateTime.now().plusDays(8));
+        booking.setStatus(BookingStatus.APPROVED);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getForOwnedItems(ownerDto.getId(), "future", 0, 20);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldReturnForOwnedItemsCurrent() {
+        Booking booking = new Booking();
+        Item bookingItem = ItemMapper.toItem(firstItemDto, UserMapper.toUser(ownerDto));
+        bookingItem.setId(firstItemDto.getId());
+        booking.setItem(bookingItem);
+        booking.setBooker(UserMapper.toUser(otherUserDto));
+        booking.setStart(LocalDateTime.now().minusDays(5));
+        booking.setEnd(LocalDateTime.now().plusDays(4));
+        booking.setStatus(BookingStatus.APPROVED);
+        Booking saved = bookingRepository.save(booking);
+        Collection<BookingDto> expected = List.of(BookingMapper.toBookingDto(saved));
+        Collection<BookingDto> actual = bookingService.getForOwnedItems(ownerDto.getId(), "current", 0, 20);
         assertEquals(expected, actual);
     }
 
@@ -214,6 +390,15 @@ class BookingServiceImplTest {
         toInputDto.setStart(LocalDateTime.now().plusDays(1));
         toInputDto.setEnd(LocalDateTime.now().plusDays(2));
         assertThrows(NotFoundException.class, () -> bookingService.create(ownerDto.getId(), toInputDto));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToCreateWithEndEarlierThenStart() {
+        BookingToInputDto toInputDto = new BookingToInputDto();
+        toInputDto.setItemId(firstItemDto.getId());
+        toInputDto.setStart(LocalDateTime.now().plusDays(3));
+        toInputDto.setEnd(LocalDateTime.now().plusDays(1));
+        assertThrows(NotValidException.class, () -> bookingService.create(otherUserDto.getId(), toInputDto));
     }
 
     @Test

@@ -161,7 +161,7 @@ public class BookingServiceImpl implements BookingService {
 
     private BookingKeyWords parse(String word) {
         try {
-            return BookingKeyWords.valueOf(word);
+            return BookingKeyWords.valueOf(word.toUpperCase());
         } catch (IllegalArgumentException exception) {
             throw new NotValidException("Unknown state: " + word);
         }
