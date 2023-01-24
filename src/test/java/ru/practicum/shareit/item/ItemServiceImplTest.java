@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.practicum.shareit.Exception.ForbiddenException;
 import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -73,6 +74,11 @@ class ItemServiceImplTest {
         ItemAllFieldsDto expected = ItemMapper.toItemDto(savedItem,
                 new ArrayList<>());
         assertEquals(expected, itemService.get(savedItem.getId(), otherUser.getId()));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenGetByWrongId() {
+        assertThrows(NotFoundException.class, () -> itemService.get(WRONG_ID, otherUser.getId()));
     }
 
     @Test
@@ -148,6 +154,16 @@ class ItemServiceImplTest {
         toUpdate.setName("Updated");
         assertEquals(expected, itemService.patch(toUpdate, savedItem.getId(), owner.getId()));
         assertEquals(expected.getName(), itemService.get(savedItem.getId(), otherUser.getId()).getName());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenPatchByNotOwner() {
+        Item newItem = new Item(1L, "First", "First Item description",
+                true, UserMapper.toUser(owner), null);
+        Item savedItem = itemRepository.save(newItem);
+        ItemToInputDto toUpdate = new ItemToInputDto();
+        toUpdate.setName("Updated");
+        assertThrows(ForbiddenException.class, () -> itemService.patch(toUpdate, savedItem.getId(), otherUser.getId()));
     }
 
     @Test
