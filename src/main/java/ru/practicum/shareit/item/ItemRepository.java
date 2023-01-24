@@ -25,6 +25,4 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findAllByOwner_IdOrderByIdAsc(Long userId, Pageable pageable);
 
     Collection<Item> findAllByRequest(Long requestId);
-
-    Item findByIdOrderByIdDesc(long itemId) throws NotFoundException;
 }

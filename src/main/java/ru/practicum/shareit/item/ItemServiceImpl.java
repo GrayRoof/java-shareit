@@ -79,8 +79,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemAllFieldsDto patch(ItemToInputDto itemToInputDto, long itemId, long userId) throws ForbiddenException, NotFoundException {
-        Item storedItem = itemRepository.findByIdOrderByIdDesc(itemId);
+    public ItemAllFieldsDto patch(ItemToInputDto itemToInputDto, long itemId, long userId)
+            throws ForbiddenException, NotFoundException {
+        Item storedItem = itemRepository.get(itemId);
         if (storedItem.getOwner().getId() != userId) {
             throw new ForbiddenException("Владелец вещи не совпадает с пользователем " + userId + ". " +
                     "Изменить вещь может только владелец!");
