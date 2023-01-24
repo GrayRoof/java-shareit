@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.Exception.NotFoundException;
+import ru.practicum.shareit.Exception.NotValidException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
 import ru.practicum.shareit.request.dto.ItemRequestToInputDto;
@@ -89,6 +90,14 @@ class ItemRequestServiceImplTest {
         Collection<ItemRequestDto> expected = List.of(ItemRequestMapper.toItemRequestDto(saved, new ArrayList<>()));
         Collection<ItemRequestDto> actual = itemRequestService.getAll(owner.getId(), 0, 2);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void shouldThrowWhenTryToGetAllItemRequestsWithWrongPageParameters() {
+        ItemRequest request = new ItemRequest(1L, "New Item",
+                UserMapper.toUser(otherUser), LocalDateTime.now());
+        itemRequestRepository.save(request);
+        assertThrows(NotValidException.class, () -> itemRequestService.getAll(owner.getId(), -9, 2));
     }
 
     @Test

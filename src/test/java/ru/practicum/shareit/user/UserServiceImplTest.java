@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import ru.practicum.shareit.Exception.DuplicateEmailException;
 import ru.practicum.shareit.Exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
@@ -95,7 +97,27 @@ class UserServiceImplTest {
     }
 
     @Test
-    void patch() {
+    void shouldThrowExceptionsWhenAddUserWithSameEmail() {
+        User localFirstUser = new User(1L, "First", "first@test.test");
+        UserDto firstUserDto = UserMapper.toUserDto(localFirstUser);
+        userService.add(firstUserDto);
+        UserDto userWithSameEmail = new UserDto(2L, "Second", "first@test.test");
+        assertThrows(DataIntegrityViolationException.class, () -> userService.add(userWithSameEmail));
+    }
+
+    @Test
+    void shouldPatch() {
+        User localUser = new User(1L, "First", "first@test.test");
+        User savedUser = userRepository.save(localUser);
+        localUser.setName("Updated");
+        UserDto userDtoToUpdate = UserMapper.toUserDto(localUser);
+
+        UserDto actual = userService.patch(userDtoToUpdate, savedUser.getId());
+        Assertions.assertEquals(userDtoToUpdate.getName(), actual.getName());
+    }
+
+    @Test
+    void shouldThrowPatch() {
         User localUser = new User(1L, "First", "first@test.test");
         User savedUser = userRepository.save(localUser);
         localUser.setName("Updated");
