@@ -68,7 +68,7 @@ public class ErrorHandler {
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(value = {DuplicateEmailException.class, DataIntegrityViolationException.class})
+    @ExceptionHandler(value = {DataIntegrityViolationException.class})
     public ErrorMessage handleDuplicateException(Exception exception, WebRequest request) {
         ErrorMessage error = new ErrorMessage(
                 new Date(),

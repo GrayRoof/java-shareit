@@ -8,7 +8,7 @@ import java.util.Collection;
 public interface ItemRequestService {
 
     /**
-     * Возвращает DTO Вещи по идентификатору
+     * Возвращает DTO Запроса Вещи по идентификатору
      * @param id идентификатор Запроса
      * @param userId идентификатор пользователя
      * @return ItemRequestDto
@@ -16,7 +16,7 @@ public interface ItemRequestService {
     ItemRequestDto get(long id, long userId);
 
     /**
-     * Возвращает DTO Вещи по идентификатору
+     * Возвращает коллекцию DTO Запросов Вещи
      * @param userId идентификатор пользователя
      * @param from начальная позиция
      * @param size количество записей в выдаче
@@ -25,16 +25,16 @@ public interface ItemRequestService {
     Collection<ItemRequestDto> getAll(long userId, int from, int size);
 
     /**
-     * Возвращает DTO Вещи по идентификатору
-     * @param userId идентификатор пользователя
+     * Возвращает коллекцию DTO Запросов Вещи по идентификатору пользователя
+     * @param userId идентификатор пользователя - создателя Запроса
      * @return коллекцию ItemRequestDto
      */
     Collection<ItemRequestDto> getByUserId(long userId);
 
     /**
-     * Возвращает DTO Вещи по идентификатору
-     * @param itemRequestDto идентификатор вещи
-     * @param userId идентификатор пользователя
+     * Добавляет Запрос вещи
+     * @param itemRequestDto DTO Запроса вещи
+     * @param userId идентификатор пользователя - создателя Запроса
      * @return ItemRequestDto
      */
     ItemRequestDto add(ItemRequestToInputDto itemRequestDto, long userId);

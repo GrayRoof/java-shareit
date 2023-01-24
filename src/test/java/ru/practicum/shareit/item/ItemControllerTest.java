@@ -8,10 +8,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.Exception.ForbiddenException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.nio.charset.StandardCharsets;
@@ -148,6 +149,20 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.name", is(secondItemDto.getName())))
                 .andExpect(jsonPath("$.description", is(secondItemDto.getDescription())))
                 .andExpect(jsonPath("$.available", is(secondItemDto.getAvailable())));
+    }
+
+    @Test
+    void shouldReturn403WhenPatchItemByOtherUser() throws Exception {
+        when(itemService.patch(any(), anyLong(), anyLong()))
+                .thenThrow(new ForbiddenException("ForbiddenException"));
+        mvc.perform(patch("/items/1")
+                        .header("X-Sharer-User-Id", 1L)
+                        .content(mapper.writeValueAsString(secondItemDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.error", is("ForbiddenException")));
     }
 
     @Test
