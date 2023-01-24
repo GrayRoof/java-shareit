@@ -33,13 +33,14 @@ class ItemRepositoryTest {
     User owner;
     User otherUser;
     Item firstItem;
+
     @BeforeEach
     void setUp() {
         if (userRepository.findAll().isEmpty()) {
             owner = userRepository.save(new User(null, "Owner", "Owner@test.test"));
             otherUser = userRepository.save(new User(null, "Other", "Other@test.test"));
         }
-        if(itemRepository.findAll().isEmpty()) {
+        if (itemRepository.findAll().isEmpty()) {
             firstItem = itemRepository.save(new Item(null, "First Item",
                     "First Item description", true, owner, null));
         }
