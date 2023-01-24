@@ -8,6 +8,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.Exception.NotAvailableException;
+import ru.practicum.shareit.Exception.NotFoundException;
+import ru.practicum.shareit.Exception.NotValidException;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingToInputDto;
@@ -37,6 +40,8 @@ class BookingControllerTest {
     private MockMvc mvc;
     @Autowired
     private ObjectMapper mapper;
+
+    private static final long WRONG_ID = Long.MAX_VALUE;
 
     User owner;
     User requester;
@@ -85,6 +90,25 @@ class BookingControllerTest {
     }
 
     @Test
+    void shouldReturn404WhenThrowNotFoundExceptionGetWithWrongUserId() throws Exception {
+        when(bookingService.get(anyLong(), anyLong()))
+                .thenThrow(new NotFoundException("NotFoundException"));
+        mvc.perform(get("/bookings/1")
+                        .header("X-Sharer-User-Id", WRONG_ID))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error", is("NotFoundException")));
+    }
+
+    @Test
+    void shouldReturn404WhenThrowNotFoundExceptionGetWithWrongId() throws Exception {
+        when(bookingService.get(anyLong(), anyLong()))
+                .thenThrow(new NotFoundException("NotFoundException"));
+        mvc.perform(get("/bookings/" + WRONG_ID)
+                        .header("X-Sharer-User-Id", 1L))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void shouldCallGetCreated() throws Exception {
         when(bookingService.getCreated(anyLong(), anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of(bookingDto));
@@ -95,6 +119,19 @@ class BookingControllerTest {
                     .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id", is(bookingDto.getId()), Long.class));
+    }
+
+    @Test
+    void shouldReturn400WhenThrowNotValidException() throws Exception {
+        when(bookingService.getCreated(anyLong(), anyString(), anyInt(), anyInt()))
+                .thenThrow(new NotValidException("NotValidException"));
+        mvc.perform(get("/bookings")
+                        .param("from", "-10")
+                        .param("size", "2")
+                        .param("state", "FUTURE")
+                        .header("X-Sharer-User-Id", 1L))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("NotValidException")));
     }
 
     @Test
@@ -122,6 +159,20 @@ class BookingControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(bookingDto.getId()), Long.class));
+    }
+
+    @Test
+    void shouldReturn4xxWhenThrowNotAvailableException() throws Exception {
+        when(bookingService.create(anyLong(), any()))
+                .thenThrow(new NotAvailableException("NotAvailableException"));
+        mvc.perform(post("/bookings")
+                        .header("X-Sharer-User-Id", 1L)
+                        .content(mapper.writeValueAsString(bookingToInputDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("NotAvailableException")));
     }
 
     @Test
