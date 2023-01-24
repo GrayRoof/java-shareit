@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.Exception.ForbiddenException;
 import ru.practicum.shareit.Exception.NotFoundException;
+import ru.practicum.shareit.Exception.NotValidException;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -144,6 +145,15 @@ class ItemServiceImplTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenTryToAddItemWithoutAvailable() {
+        ItemAllFieldsDto newItemDto = new ItemAllFieldsDto();
+        newItemDto.setName("NewItem");
+        newItemDto.setDescription("New Item description");
+
+        assertThrows(NotValidException.class, () -> itemService.add(newItemDto, owner.getId()));
+    }
+
+    @Test
     void shouldPatch() {
         Item newItem = new Item(1L, "First", "First Item description",
                 true, UserMapper.toUser(owner), null);
@@ -167,6 +177,13 @@ class ItemServiceImplTest {
     }
 
     @Test
+    void shouldThrowExceptionWhenPatchNotExistingItem() {
+        ItemToInputDto toUpdate = new ItemToInputDto();
+        toUpdate.setName("Updated");
+        assertThrows(NotFoundException.class, () -> itemService.patch(toUpdate, WRONG_ID, otherUser.getId()));
+    }
+
+    @Test
     void shouldDelete() {
         Item newItem = new Item(1L, "First", "First Item description",
                 true, UserMapper.toUser(owner), null);
@@ -187,6 +204,16 @@ class ItemServiceImplTest {
     }
 
     @Test
+    void shouldReturnEmptyListWhenSearchWithEmptySearchWord() {
+        Item newItem = new Item(1L, "First", "First Item description",
+                true, UserMapper.toUser(owner), null);
+        itemRepository.save(newItem);
+        Collection<ItemAllFieldsDto> expected = new ArrayList<>();
+        Collection<ItemAllFieldsDto> actual = itemService.search("", otherUser.getId(), 0,2);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void shouldAddComment() {
         Item newItem = new Item(1L, "First", "First Item description",
                 true, UserMapper.toUser(owner), null);
@@ -203,5 +230,23 @@ class ItemServiceImplTest {
         CommentDto savedCommentDto = itemService.addComment(otherUser.getId(), savedItem.getId(), newComment);
         assertEquals(newComment.getText(), savedCommentDto.getText());
         assertEquals(otherUser.getName(), savedCommentDto.getAuthorName());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenNotRequesterTryToAddComment() {
+        Item newItem = new Item(1L, "First", "First Item description",
+                true, UserMapper.toUser(owner), null);
+        Item savedItem = itemRepository.save(newItem);
+        Booking newBooking = new Booking();
+        newBooking.setItem(savedItem);
+        newBooking.setStatus(BookingStatus.APPROVED);
+        newBooking.setBooker(UserMapper.toUser(otherUser));
+        newBooking.setStart(LocalDateTime.now().plusDays(2L));
+        newBooking.setEnd(LocalDateTime.now().plusDays(3L));
+        bookingRepository.save(newBooking);
+        CommentToInputDto newComment = new CommentToInputDto();
+        newComment.setText("Comment for First Item");
+        assertThrows(NotValidException.class, () -> itemService
+                .addComment(otherUser.getId(), savedItem.getId(), newComment));
     }
 }
