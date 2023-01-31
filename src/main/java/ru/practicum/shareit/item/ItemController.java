@@ -28,16 +28,18 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemAllFieldsDto getId(@RequestHeader("X-Sharer-User-Id") long userId,
-                                  @PathVariable long itemId) throws NotFoundException {
+    public ItemAllFieldsDto getById(@RequestHeader("X-Sharer-User-Id") long userId,
+                                    @PathVariable long itemId) throws NotFoundException {
         log.info("ITEM получен запрос GET " + itemId);
         return itemService.get(itemId, userId);
     }
 
     @GetMapping
-    public Collection<ItemAllFieldsDto> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public Collection<ItemAllFieldsDto> getAll(@RequestHeader("X-Sharer-User-Id") long userId,
+                                               @RequestParam(required = false, defaultValue = "0") int from,
+                                               @RequestParam(required = false, defaultValue = "20") int size) {
         log.info("ITEM получен запрос GET ALL");
-        return itemService.getAllByUserId(userId);
+        return itemService.getAllByUserId(userId, from, size);
     }
 
     @PostMapping
@@ -69,9 +71,11 @@ public class ItemController {
 
     @GetMapping("/search")
     public Collection<ItemAllFieldsDto> search(@RequestHeader("X-Sharer-User-Id") long userId,
-                                               @RequestParam String text) {
+                                               @RequestParam String text,
+                                               @RequestParam(required = false, defaultValue = "0") int from,
+                                               @RequestParam(required = false, defaultValue = "20") int size) {
         log.info("ITEM получен запрос GET userId = " + userId + " search = " + text);
-        return itemService.search(text, userId);
+        return itemService.search(text, userId, from, size);
     }
 
 }

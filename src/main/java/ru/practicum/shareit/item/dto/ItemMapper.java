@@ -54,6 +54,7 @@ public class ItemMapper {
          item.setDescription(itemAllFieldsDto.getDescription() == null ? "" : itemAllFieldsDto.getDescription());
          item.setAvailable(itemAllFieldsDto.getAvailable());
          item.setOwner(owner);
+         item.setRequest(itemAllFieldsDto.getRequestId());
          return item;
     }
 }

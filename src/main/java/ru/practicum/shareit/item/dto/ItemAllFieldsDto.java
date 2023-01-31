@@ -19,13 +19,13 @@ public class ItemAllFieldsDto {
     Collection<CommentDto> comments;
     BookingNestedDto lastBooking;
     BookingNestedDto nextBooking;
-    private Long request;
+    private Long requestId;
 
     public ItemAllFieldsDto(long id, String name, String description, Boolean available, long request) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
-        this.request = request;
+        this.requestId = request;
     }
 }
