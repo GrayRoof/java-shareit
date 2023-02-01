@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.Exception.ForbiddenException;
-import ru.practicum.shareit.Exception.NotFoundException;
-import ru.practicum.shareit.Exception.NotValidException;
+import ru.practicum.shareit.exception.ForbiddenException;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.NotValidException;
 import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.booking.dto.BookingNestedDto;
 import ru.practicum.shareit.item.dto.*;
@@ -126,6 +126,7 @@ public class ItemServiceImpl implements ItemService {
                 .stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
+        log.info("Получен результат поиска {}", result);
         return result;
     }
 

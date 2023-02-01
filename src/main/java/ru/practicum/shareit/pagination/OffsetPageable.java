@@ -2,7 +2,7 @@ package ru.practicum.shareit.pagination;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import ru.practicum.shareit.Exception.NotValidException;
+import ru.practicum.shareit.exception.NotValidException;
 
 public class OffsetPageable implements Pageable {
 

@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.Exception.NotFoundException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentToInputDto;
 import ru.practicum.shareit.item.dto.ItemToInputDto;
@@ -59,7 +59,6 @@ public interface ItemService {
     /**
      * Реализует удаление Вещи из хранилища
      * @param id идентификатор удаляемой вещи
-     * @return true в случае успешного удаления
      */
     void delete(long id);
 
