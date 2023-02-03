@@ -56,6 +56,6 @@ public class BookingClient extends BaseClient {
         Map<String, Object> param = Map.of(
                 "approved", approved
         );
-        return patch("/" + bookingId + "?approved={approved}", userId , param, approved);
+        return patch("/" + bookingId + "?approved={approved}", userId, param, approved);
     }
 }
