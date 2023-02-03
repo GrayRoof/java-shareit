@@ -76,6 +76,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <layout>JAR</layout>
                     <classifier>exec</classifier>
                     <excludes>
                         <exclude>
@@ -84,7 +85,6 @@
                         </exclude>
                     </excludes>
                     <mainClass>ru.practicum.shareit.ShareItServer</mainClass>
-                    <layout>JAR</layout>
                 </configuration>
                 <executions>
                     <execution>
