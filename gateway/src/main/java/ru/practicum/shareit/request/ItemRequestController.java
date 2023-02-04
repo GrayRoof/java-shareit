@@ -29,7 +29,7 @@ public class ItemRequestController {
     public ResponseEntity<Object> getAllRequests(
             @RequestHeader("X-Sharer-User-Id")long userId,
             @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-            @RequestParam(required = false, defaultValue = "20") @Positive int size){
+            @RequestParam(required = false, defaultValue = "20") @Positive int size) {
         log.info("GATEWAY REQUEST GET all from {} limit {} user {}", from, size, userId);
         return itemRequestClient.getAll(userId, from, size);
     }
