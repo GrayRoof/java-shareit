@@ -12,6 +12,9 @@ services:
       - server
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
 
   server:
     build:
@@ -29,6 +32,9 @@ services:
       DB_USER: postgres
       DB_PASS: iamroot
       TZ: "Europe/Moscow"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
 
   db:
     image: postgres:14.3-alpine
@@ -43,3 +49,5 @@ services:
       POSTGRES_DATA: /var/lib/postgresql/data/pgdata
     volumes:
       - ./postgres_db:/var/lib/postgresql/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
