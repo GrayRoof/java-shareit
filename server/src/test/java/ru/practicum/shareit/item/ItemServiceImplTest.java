@@ -90,9 +90,9 @@ class ItemServiceImplTest {
         ItemAllFieldsDto expected = ItemMapper.toItemDto(savedItem,
                 new ArrayList<>());
         expected.setLastBooking(BookingMapper.toBookingNestedDto(bookingRepository
-                .getLastForItem(savedItem.getId(), LocalDateTime.now())));
+                .findFirstByItem_IdAndEndBeforeOrderByEndDesc(savedItem.getId(), LocalDateTime.now())));
         expected.setNextBooking(BookingMapper.toBookingNestedDto(bookingRepository
-                .getNextForItem(savedItem.getId(), LocalDateTime.now())));
+                .findFirstByItem_IdAndStartAfterOrderByStartAsc(savedItem.getId(), LocalDateTime.now())));
         assertEquals(expected, itemService.get(savedItem.getId(), owner.getId()));
     }
 

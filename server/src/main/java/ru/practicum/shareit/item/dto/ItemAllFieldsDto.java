@@ -10,16 +10,16 @@ import java.util.Collection;
 @Data
 @RequiredArgsConstructor
 public class ItemAllFieldsDto {
-    private Long id;
+    Long id;
     @NotEmpty
-    private String name;
+    String name;
     @NotEmpty
-    private String description;
-    private Boolean available;
+    String description;
+    Boolean available;
     Collection<CommentDto> comments;
     BookingNestedDto lastBooking;
     BookingNestedDto nextBooking;
-    private Long requestId;
+    Long requestId;
 
     public ItemAllFieldsDto(long id, String name, String description, Boolean available, long request) {
         this.id = id;

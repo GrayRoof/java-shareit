@@ -32,8 +32,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.booker.id = ?1 AND b.start > ?2 ORDER BY b.start DESC")
     Page<Booking> getAllFuture(long bookerId, LocalDateTime now, Pageable pageable);
 
-    @Query("SELECT b FROM Booking b WHERE b.item.owner.id = ?1 ORDER BY b.start DESC")
-    Page<Booking> getAllForOwner(long bookerId, Pageable pageable);
+    Page<Booking> findAllByItemOwnerIdOrderByStartDesc(long bookerId, Pageable pageable);
 
     @Query("SELECT b FROM Booking b WHERE b.item.owner.id = ?1 AND b.status = ?2 ORDER BY b.start DESC")
     Page<Booking> getAllByStatusForOwner(long bookerId, BookingStatus status, Pageable pageable);
@@ -47,11 +46,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.item.owner.id = ?1 AND b.start > ?2 ORDER BY b.start DESC")
     Page<Booking> getAllFutureForOwner(long bookerId, LocalDateTime now, Pageable pageable);
 
-    @Query("SELECT b FROM Booking b WHERE b.item.id = ?1 AND b.end < ?2 ORDER BY b.end DESC")
-    Booking getLastForItem(long itemId, LocalDateTime now);
+    Booking findFirstByItem_IdAndEndBeforeOrderByEndDesc(long itemId, LocalDateTime now);
 
-    @Query("SELECT b FROM Booking b WHERE b.item.id = ?1 AND b.start > ?2 ORDER BY b.start ASC")
-    Booking getNextForItem(long itemId, LocalDateTime now);
+    Booking findFirstByItem_IdAndStartAfterOrderByStartAsc(long itemId, LocalDateTime now);
 
     @Query(
             "SELECT COUNT (b) FROM Booking b " +

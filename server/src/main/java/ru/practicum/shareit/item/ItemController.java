@@ -30,7 +30,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ItemAllFieldsDto getById(@RequestHeader("X-Sharer-User-Id") long userId,
                                     @PathVariable long itemId) throws NotFoundException {
-        log.info("ITEM получен запрос GET " + itemId);
+        log.info("SERVER ITEM получен запрос GET " + itemId);
         return itemService.get(itemId, userId);
     }
 
@@ -38,14 +38,14 @@ public class ItemController {
     public Collection<ItemAllFieldsDto> getAll(@RequestHeader("X-Sharer-User-Id") long userId,
                                                @RequestParam(required = false, defaultValue = "0") int from,
                                                @RequestParam(required = false, defaultValue = "20") int size) {
-        log.info("ITEM получен запрос GET ALL");
+        log.info("SERVER ITEM получен запрос GET ALL");
         return itemService.getAllByUserId(userId, from, size);
     }
 
     @PostMapping
     public ItemAllFieldsDto addItem(@RequestHeader("X-Sharer-User-Id") long userId,
                                     @Valid @RequestBody ItemAllFieldsDto itemAllFieldsDto) throws NotFoundException {
-        log.info("ITEM получен запрос POST userId =" + userId + "тело запроса: " + itemAllFieldsDto);
+        log.info("SERVER ITEM получен запрос POST userId =" + userId + "тело запроса: " + itemAllFieldsDto);
         return itemService.add(itemAllFieldsDto, userId);
     }
 
@@ -55,7 +55,7 @@ public class ItemController {
             @PathVariable long itemId,
             @Valid @RequestBody CommentToInputDto commentToInputDto
     ) {
-        log.info("ITEM COMMENT получен запрос POST userId = " + userId
+        log.info("SERVER ITEM COMMENT получен запрос POST userId = " + userId
                 + " itemId = " + itemId + " тело запроса: " + commentToInputDto);
         return itemService.addComment(userId, itemId, commentToInputDto);
     }
@@ -64,7 +64,7 @@ public class ItemController {
     public ItemAllFieldsDto patchItem(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @PathVariable long itemId,
                                       @Valid @RequestBody ItemToInputDto itemToInputDto) throws NotFoundException {
-        log.info("ITEM получен запрос PATCH userId = " + userId
+        log.info("SERVER ITEM получен запрос PATCH userId = " + userId
                 + " itemId = " + itemId + " тело запроса " + itemToInputDto);
         return itemService.patch(itemToInputDto, itemId, userId);
     }
@@ -74,7 +74,7 @@ public class ItemController {
                                                @RequestParam String text,
                                                @RequestParam(required = false, defaultValue = "0") int from,
                                                @RequestParam(required = false, defaultValue = "20") int size) {
-        log.info("ITEM получен запрос GET userId = " + userId + " search = " + text);
+        log.info("SERVER ITEM получен запрос GET userId = " + userId + " search = " + text);
         return itemService.search(text, userId, from, size);
     }
 

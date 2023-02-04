@@ -21,7 +21,7 @@ public class BookingController {
             @RequestHeader("X-Sharer-User-Id") long userId,
             @PathVariable long bookingId
     ) {
-        log.info("BOOKING GET {}", bookingId);
+        log.info("SERVER BOOKING GET {}", bookingId);
         return bookingService.get(userId, bookingId);
     }
 
@@ -32,7 +32,7 @@ public class BookingController {
             @RequestParam(required = false, defaultValue = "0") int from,
             @RequestParam(required = false, defaultValue = "20") int size
     ) {
-        log.info("BOOKING GET for user {} state {}. Pagination from {} limit {}", userId, state, from, size);
+        log.info("SERVER BOOKING GET for user {} state {}. Pagination from {} limit {}", userId, state, from, size);
         return bookingService.getCreated(userId, state, from, size);
     }
 
@@ -43,7 +43,7 @@ public class BookingController {
             @RequestParam(required = false, defaultValue = "0") int from,
             @RequestParam(required = false, defaultValue = "20") int size
     ) {
-        log.info("BOOKING GET for owner {} state {}. Pagination from {} limit {}", userId, state, from, size);
+        log.info("SERVER BOOKING GET for owner {} state {}. Pagination from {} limit {}", userId, state, from, size);
         return bookingService.getForOwnedItems(userId, state, from, size);
     }
 
@@ -52,7 +52,7 @@ public class BookingController {
             @RequestHeader("X-Sharer-User-Id") long userId,
             @Valid @RequestBody BookingToInputDto bookingToInputDto
             ) {
-        log.info("BOOKING POST by user {} данные {}", userId, bookingToInputDto);
+        log.info("SERVER BOOKING POST by user {} данные {}", userId, bookingToInputDto);
         return bookingService.create(userId, bookingToInputDto);
     }
 
@@ -62,7 +62,7 @@ public class BookingController {
             @PathVariable long bookingId,
             @RequestParam("approved") boolean approved
     ) {
-        log.info("BOOKING PATCH {} by user {} approved {}", bookingId, userId, approved);
+        log.info("SERVER BOOKING PATCH {} by user {} approved {}", bookingId, userId, approved);
         return bookingService.setApproved(userId, bookingId, approved);
     }
 }

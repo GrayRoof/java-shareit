@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingToInputDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 
 @Slf4j
@@ -29,10 +31,10 @@ public class BookingController {
     public ResponseEntity<Object> getCreated(
             @RequestHeader("X-Sharer-User-Id") long userId,
             @RequestParam(defaultValue = "ALL") String state,
-            @RequestParam(required = false, defaultValue = "0") int from,
-            @RequestParam(required = false, defaultValue = "20") int size
+            @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
+            @RequestParam(required = false, defaultValue = "20") @Positive int size
     ) {
-        log.info("BOOKING GET for user {} state {}. Pagination from {} limit {}", userId, state, from, size);
+        log.info("GATEWAY BOOKING GET for user {} state {}. Pagination from {} limit {}", userId, state, from, size);
         return bookingClient.getCreated(userId, state, from, size);
     }
 
@@ -40,10 +42,10 @@ public class BookingController {
     public ResponseEntity<Object> getForOwnedItems(
             @RequestHeader("X-Sharer-User-Id") long userId,
             @RequestParam(defaultValue = "ALL") String state,
-            @RequestParam(required = false, defaultValue = "0") int from,
-            @RequestParam(required = false, defaultValue = "20") int size
+            @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
+            @RequestParam(required = false, defaultValue = "20") @Positive int size
     ) {
-        log.info("BOOKING GET for owner {} state {}. Pagination from {} limit {}", userId, state, from, size);
+        log.info("GATEWAY BOOKING GET for owner {} state {}. Pagination from {} limit {}", userId, state, from, size);
         return bookingClient.getForOwnedItems(userId, state, from, size);
     }
 
@@ -52,7 +54,7 @@ public class BookingController {
             @RequestHeader("X-Sharer-User-Id") long userId,
             @Valid @RequestBody BookingToInputDto bookingToInputDto
     ) {
-        log.info("BOOKING POST by user {} данные {}", userId, bookingToInputDto);
+        log.info("GATEWAY BOOKING POST by user {} body {}", userId, bookingToInputDto);
         return bookingClient.create(userId, bookingToInputDto);
     }
 
@@ -62,7 +64,7 @@ public class BookingController {
             @PathVariable long bookingId,
             @RequestParam("approved") boolean approved
     ) {
-        log.info("BOOKING PATCH {} by user {} approved {}", bookingId, userId, approved);
+        log.info("GATEWAY BOOKING PATCH {} by user {} approved {}", bookingId, userId, approved);
         return bookingClient.setApproved(userId, bookingId, approved);
     }
 }

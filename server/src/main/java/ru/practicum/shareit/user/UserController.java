@@ -20,26 +20,26 @@ public class UserController {
 
     @GetMapping("{id}")
     public UserDto getUserById(@PathVariable long id) throws NotFoundException {
-        log.info("getUserById {}", id);
+        log.info("SERVER getUserById {}", id);
         return userService.get(id);
     }
 
     @GetMapping
     public Collection<UserDto> getAllUsers() {
-        log.info("getAllUsers");
+        log.info("SERVER getAllUsers");
         return userService.getAll();
     }
 
     @PostMapping
     public UserDto create(@Valid @RequestBody UserDto userDto) {
-        log.info("create");
+        log.info("SERVER create");
         return userService.add(userDto);
     }
 
     @PatchMapping("/{userId}")
     public UserDto update(@RequestBody UserDto userDto,
                           @PathVariable Long userId) throws NotFoundException {
-        log.info("update userId {}", userId);
+        log.info("SERVER update userId {}", userId);
         return userService.patch(userDto, userId);
     }
 

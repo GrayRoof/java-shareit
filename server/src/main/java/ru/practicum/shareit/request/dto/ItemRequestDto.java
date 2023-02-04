@@ -9,9 +9,9 @@ import java.util.Collection;
 
 @Data
 public class ItemRequestDto {
-    private long id;
-    private String description;
-    private User requester;
-    private LocalDateTime created;
-    private Collection<ItemAllFieldsDto> items;
+    long id;
+    String description;
+    User requester;
+    LocalDateTime created;
+    Collection<ItemAllFieldsDto> items;
 }

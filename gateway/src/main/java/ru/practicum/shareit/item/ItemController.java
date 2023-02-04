@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentToInputDto;
-import ru.practicum.shareit.item.dto.ItemAllFieldsDto;
 import ru.practicum.shareit.item.dto.ItemToInputDto;
 
 import javax.validation.Valid;
@@ -38,7 +37,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<Object> addNewItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                                             @Valid @RequestBody ItemAllFieldsDto itemDto) {
+                                             @Valid @RequestBody ItemToInputDto itemDto) {
         return itemClient.addItem(itemDto, userId);
     }
 

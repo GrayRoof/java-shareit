@@ -44,12 +44,14 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingNestedDto getLastForItem(long itemId) {
-        return BookingMapper.toBookingNestedDto(bookingRepository.getLastForItem(itemId, LocalDateTime.now()));
+        return BookingMapper.toBookingNestedDto(bookingRepository
+                .findFirstByItem_IdAndEndBeforeOrderByEndDesc(itemId, LocalDateTime.now()));
     }
 
     @Override
     public BookingNestedDto getNextForItem(long itemId) {
-        return BookingMapper.toBookingNestedDto(bookingRepository.getNextForItem(itemId, LocalDateTime.now()));
+        return BookingMapper.toBookingNestedDto(bookingRepository
+                .findFirstByItem_IdAndStartAfterOrderByStartAsc(itemId, LocalDateTime.now()));
     }
 
     @Override
@@ -63,10 +65,12 @@ public class BookingServiceImpl implements BookingService {
                 found = bookingRepository.getAll(userId, OffsetPageable.of(from, size, Sort.unsorted()));
                 break;
             case WAITING:
-                found = bookingRepository.getAllByStatus(userId, BookingStatus.WAITING, OffsetPageable.of(from, size, Sort.unsorted()));
+                found = bookingRepository.getAllByStatus(userId, BookingStatus.WAITING,
+                        OffsetPageable.of(from, size, Sort.unsorted()));
                 break;
             case REJECTED:
-                found = bookingRepository.getAllByStatus(userId, BookingStatus.REJECTED, OffsetPageable.of(from, size, Sort.unsorted()));
+                found = bookingRepository.getAllByStatus(userId, BookingStatus.REJECTED,
+                        OffsetPageable.of(from, size, Sort.unsorted()));
                 break;
             case PAST:
                 found = bookingRepository.getAllPast(userId, now, OffsetPageable.of(from, size, Sort.unsorted()));
@@ -89,22 +93,27 @@ public class BookingServiceImpl implements BookingService {
         Page<Booking> found = null;
         switch (keyWord) {
             case ALL:
-                found = bookingRepository.getAllForOwner(ownerId, OffsetPageable.of(from, size, Sort.unsorted()));
+                found = bookingRepository.findAllByItemOwnerIdOrderByStartDesc(ownerId, OffsetPageable.of(from, size, Sort.unsorted()));
                 break;
             case WAITING:
-                found = bookingRepository.getAllByStatusForOwner(ownerId, BookingStatus.WAITING, OffsetPageable.of(from, size, Sort.unsorted()));
+                found = bookingRepository.getAllByStatusForOwner(ownerId, BookingStatus.WAITING,
+                        OffsetPageable.of(from, size, Sort.unsorted()));
                 break;
             case REJECTED:
-                found = bookingRepository.getAllByStatusForOwner(ownerId, BookingStatus.REJECTED, OffsetPageable.of(from, size, Sort.unsorted()));
+                found = bookingRepository.getAllByStatusForOwner(ownerId, BookingStatus.REJECTED,
+                        OffsetPageable.of(from, size, Sort.unsorted()));
                 break;
             case PAST:
-                found = bookingRepository.getAllPastForOwner(ownerId, now, OffsetPageable.of(from, size, Sort.unsorted()));
+                found = bookingRepository.getAllPastForOwner(ownerId, now,
+                        OffsetPageable.of(from, size, Sort.unsorted()));
                 break;
             case FUTURE:
-                found = bookingRepository.getAllFutureForOwner(ownerId, now, OffsetPageable.of(from, size, Sort.unsorted()));
+                found = bookingRepository.getAllFutureForOwner(ownerId, now,
+                        OffsetPageable.of(from, size, Sort.unsorted()));
                 break;
             case CURRENT:
-                found = bookingRepository.getAllCurrentForOwner(ownerId, now, OffsetPageable.of(from, size, Sort.unsorted()));
+                found = bookingRepository.getAllCurrentForOwner(ownerId, now,
+                        OffsetPageable.of(from, size, Sort.unsorted()));
                 break;
         }
         return found.stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
@@ -143,12 +152,12 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.get(id);
 
         if (ownerId != booking.getItem().getOwner().getId()) {
-            throw new NotFoundException("Unable to approve/reject booking #" + id);
+            throw new NotFoundException("Только владелец Вещи может одобрить Бронирование #" + id);
         }
 
         BookingStatus currentStatus = booking.getStatus();
         if (currentStatus == BookingStatus.APPROVED) {
-            throw new NotAvailableException("Booking #" + id + " is already approved");
+            throw new NotAvailableException("Бронирование #" + id + " уже одобрено");
         }
 
         BookingStatus newStatus = approved ? BookingStatus.APPROVED : BookingStatus.REJECTED;
