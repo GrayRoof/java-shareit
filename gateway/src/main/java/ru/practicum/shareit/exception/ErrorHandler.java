@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ValidationException;
+import java.util.Arrays;
 
 @Slf4j
 @RestControllerAdvice
@@ -36,7 +37,8 @@ public class ErrorHandler {
     }
 
     private ResponseEntity<ErrorDto> createErrorResponse(Throwable throwable) {
-        return createErrorResponse(throwable.getMessage(), HttpStatus.BAD_REQUEST);
+        return createErrorResponse(throwable.getMessage() + Arrays.toString(throwable.getStackTrace()),
+                HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ErrorDto> createErrorResponse(String error, HttpStatus status) {
