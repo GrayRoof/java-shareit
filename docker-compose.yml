@@ -47,6 +47,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: iamroot
       POSTGRES_DATA: /var/lib/postgresql/data/pgdata
+      TZ: "Europe/Moscow"
     volumes:
       - ./postgres_db:/var/lib/postgresql/data
       - /etc/timezone:/etc/timezone:ro
