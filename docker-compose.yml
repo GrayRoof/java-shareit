@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: ./gateway/Dockerfile
+    container_name: shareit-gateway
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+    environment:
+      SHAREIT_SERVER_URL: http://server:9090
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+  server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    container_name: shareit-server
+    ports:
+      - "9090:9090"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASS: iamroot
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+  db:
+    image: postgres:14.3-alpine
+    container_name: db
+    restart: always
+    ports:
+      - "6541:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: iamroot
+      POSTGRES_DATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgres_db:/var/lib/postgresql/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
